@@ -1,5 +1,6 @@
 using disney_battle.dal.database;
 using DotNetEnv;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -15,8 +16,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DB service
+//Services 
 builder.Services.AddScoped<IDataContext,DataContext>();
+builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 
 var app = builder.Build();
 
