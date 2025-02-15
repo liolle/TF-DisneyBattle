@@ -1,3 +1,4 @@
+using disney_battle.dal.database;
 using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,13 +8,15 @@ var configuration = builder.Configuration;
 Env.Load();
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// DB service
+builder.Services.AddScoped<IDataContext,DataContext>();
 
 var app = builder.Build();
 
