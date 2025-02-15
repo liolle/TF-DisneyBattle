@@ -1,4 +1,12 @@
+using DotNetEnv;
+
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
+// Add Env &  Json configuration
+Env.Load();
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables();
 
 // Add services to the container.
 
