@@ -1,6 +1,4 @@
 
-using disney_battle.exceptions;
-
 namespace disney_battle.dal.entities;
 
 public class UserEntity
@@ -20,15 +18,7 @@ public class UserEntity
         CreatedAt = createdAt;
     }
 
-    public static UserEntity Create(string id, string userName, string email,string password,string createdAt){
-        if (!DateTime.TryParse(createdAt, out DateTime date)){
-            throw new MalformedInputException("createdAt -> UserEntity.Create()");
-        }
-
-        if (!int.TryParse(id, out int parsed_id)){
-            throw new MalformedInputException("Id -> UserEntity.Create()");
-        }
-
-        return new UserEntity( parsed_id,  userName,  email, password, date);
+    public static UserEntity Create(int id, string userName, string email,string password,DateTime createdAt){
+        return new UserEntity( id,  userName,  email, password, createdAt);
     }
 }

@@ -34,9 +34,9 @@ public class UserService(IDataContext context, IHashService hashService, IJwtSer
 
             return ICommandResult.Success();
         }
-        catch (Exception e)
+        catch (Exception )
         {
-            return ICommandResult.Failure(e.Message,e);
+            return ICommandResult.Failure("Server error");
         }
     }
 
@@ -54,11 +54,11 @@ public class UserService(IDataContext context, IHashService hashService, IJwtSer
             if (reader.Read())
             {
                 UserEntity u = UserEntity.Create(
-                    (string)reader[nameof(UserEntity.Id)],
-                    (string)reader[nameof(UserEntity.UserName)],
+                    (int)reader[nameof(UserEntity.Id)],
+                    (string)reader["user_name"],
                     (string)reader[nameof(UserEntity.Email)],
                     (string)reader[nameof(UserEntity.Password)],
-                    (string)reader[nameof(UserEntity.CreatedAt)]
+                    (DateTime)reader["created_at"]
                 );
                 return IQueryResult<UserEntity?>.Success(u);
             }
@@ -66,7 +66,7 @@ public class UserService(IDataContext context, IHashService hashService, IJwtSer
         }
         catch (Exception e)
         {
-            return IQueryResult<UserEntity?>.Failure(e.Message,e);
+            return IQueryResult<UserEntity?>.Failure("Server error");
         }
     }
 
@@ -76,7 +76,7 @@ public class UserService(IDataContext context, IHashService hashService, IJwtSer
         {
             QueryResult<UserEntity?> qr = Execute(new UserFromUserNameQuery(query.UserName));
             if (qr.IsFailure || qr.Result is null ){
-                return IQueryResult<string>.Failure(qr.ErrorMessage!,qr.Exception);
+                return IQueryResult<string>.Failure("Invalid credential combination");
             }
 
             if (!hashService.VerifyPassword(qr.Result.Password,query.Password)){
@@ -85,9 +85,9 @@ public class UserService(IDataContext context, IHashService hashService, IJwtSer
 
             return IQueryResult<string>.Success(jwt.generate(qr.Result));
         }
-        catch (Exception e)
+        catch (Exception )
         {
-            return IQueryResult<string>.Failure(e.Message,e);
+            return IQueryResult<string>.Failure("Server error");
         }
     }
 }

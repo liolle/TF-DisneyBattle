@@ -21,6 +21,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDataContext,DataContext>();
 builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 builder.Services.AddScoped<IJwtService,JwtService>();
+builder.Services.AddScoped<IHashService,HashService>();
+builder.Services.AddTransient<IUserService,UserService>();
 
 var app = builder.Build();
 
