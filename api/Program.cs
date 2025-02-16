@@ -1,4 +1,5 @@
 using disney_battle.dal.database;
+using disney_battle.domain.services;
 using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 
@@ -19,6 +20,7 @@ builder.Services.AddSwaggerGen();
 //Services 
 builder.Services.AddScoped<IDataContext,DataContext>();
 builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
+builder.Services.AddScoped<IJwtService,JwtService>();
 
 var app = builder.Build();
 
