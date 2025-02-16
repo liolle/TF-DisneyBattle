@@ -1,4 +1,4 @@
-namespace disney_battle.domain.exceptions;
+namespace disney_battle.exceptions;
 
 public abstract class DomainException : Exception
 {
@@ -9,5 +9,9 @@ public abstract class DomainException : Exception
 
 
 public class MissingConfigurationException(string config_key) : DomainException($"Missing {config_key} configuration")
+{
+}
+
+public class MalformedInputException(string input) : DomainException($"Malformed input: {input} ")
 {
 }

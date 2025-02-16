@@ -1,4 +1,4 @@
-namespace disney_battle.cqs.queries;
+namespace disney_battle.cqs;
 
 public interface IQueryDefinition<TResult>
 {
@@ -34,8 +34,7 @@ public interface IQueryResult<TResult> : IResult
 }
 
 public interface IQueryHandler<TQuery,TResult> 
-    where TQuery : IQueryDefinition<TQuery>
-    where TResult : IQueryDefinition<TResult>
+    : IQueryDefinition<TResult> where TQuery : IQueryDefinition<TResult>
 {
     QueryResult<TResult> Execute(TQuery query);
 }

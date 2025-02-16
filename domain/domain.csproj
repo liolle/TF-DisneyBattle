@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\dal\dal.csproj" />
+    <ProjectReference Include="..\cqs\cqs.csproj" />
+    <ProjectReference Include="..\exception\exception.csproj" />
   </ItemGroup>
 
 </Project>

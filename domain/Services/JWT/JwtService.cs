@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using disney_battle.dal.entities;
-using disney_battle.domain.exceptions;
+using disney_battle.exceptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

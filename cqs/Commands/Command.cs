@@ -1,4 +1,4 @@
-namespace disney_battle.cqs.commands;
+namespace disney_battle.cqs;
 
 public interface ICommandDefinition
 {
@@ -6,6 +6,7 @@ public interface ICommandDefinition
 
 public interface ICommandHandler<T> where T : ICommandDefinition
 {
+    CommandResult Execute(T command);
 }
 
 public interface ICommandResult : IResult
@@ -21,13 +22,22 @@ public interface ICommandResult : IResult
     }
 }
 
-public class CommandResult(bool isSuccess, string? errorMessage, Exception? exception) : ICommandResult
+public class CommandResult : ICommandResult
 {
-    public bool IsSuccess { get; } = isSuccess;
+    internal CommandResult(bool isSuccess, string? errorMessage, Exception? exception)
+    {
+        IsSuccess = isSuccess;
+        IsFailure = !isSuccess;
+        ErrorMessage = errorMessage;
+        Exception = exception;
+    }
 
-    public bool IsFailure { get; } = !isSuccess;
+    public bool IsSuccess { get; } 
 
-    public string? ErrorMessage { get; } = errorMessage;
+    public bool IsFailure { get; } 
 
-    public Exception? Exception { get; } = exception;
+    public string? ErrorMessage { get; } 
+
+    public Exception? Exception { get; } 
+
 }
