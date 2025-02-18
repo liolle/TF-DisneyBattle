@@ -8,9 +8,21 @@ public class AuthProvider(IAuthService service) : AuthenticationStateProvider
 {
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        await service.Auth();
+        
         ClaimsIdentity identity = new();
         User? user = service.GetUser();
+
+        for (int i = 0; i<8; i++)
+        {
+            int round = (int) Math.Ceiling(Math.Pow(2, i));
+            await Task.Delay(round);
+            User? u = service.GetUser();
+            if(u is not null){
+                user = u;
+                break;
+            }
+        }
+
         if (user != null){
             List<Claim> claims =
             [

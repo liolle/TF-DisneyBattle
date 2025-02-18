@@ -10,7 +10,7 @@ builder.Services.AddRazorComponents()
 
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5032") });
-builder.Services.AddTransient<IAuthService,AuthService>();
+builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddTransient<AuthenticationStateProvider,AuthProvider>();
 var app = builder.Build();
 
