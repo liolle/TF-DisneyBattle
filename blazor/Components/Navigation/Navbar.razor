@@ -1,26 +1,23 @@
-﻿@page "/"
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @using blazor.models
-@using blazor.services
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
+<div class="navbar-container">
+    <div class="navbar-container-l2">
+        <div class="navbar-left"></div>
+        <div class="navbar-center"></div>
+        <div class="navbar-right">
+            @if (@CurrentUser is not null)
+            {
+                <button @onclick="@Logout">Logout</button>
+            }
+            else
+            {
+                <button @onclick="@Login">Login</button>
+            }
+        </div>
 
-<PageTitle>Home</PageTitle>
-
-<div class="home-container">
-    <Navbar />
-    <div class="main">
-        @if (@CurrentUser is not null)
-        {
-            <div>
-                <span>@CurrentUser.Id</span>
-            </div>
-            <div>
-                <span>@CurrentUser.Email</span>
-            </div>
-        }
     </div>
-
 </div>
 
 @code {

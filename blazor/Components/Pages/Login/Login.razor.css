@@ -1,0 +1,92 @@
+.form-main {
+    height: 100%;
+    background-color: #262626;
+    color: azure;
+    font-family: monospace;
+    font-size:1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    user-select: none;
+    font-weight: bold;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+}
+
+.form-element {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    width: 100%;
+}
+
+.form-input  label{
+    width: 100px;
+    
+}
+
+.form-input {
+    display: flex;
+    gap: 10px;
+    
+    height: 2rem;
+}
+
+.input {
+    width: 300px;
+}
+
+.form-input-error {
+    font-size: medium;
+    font-weight: lighter;
+    font-style: italic;
+    height: 1rem;
+}
+
+
+.navbar-container {
+    width: 100%;
+    user-select: none;
+}
+
+
+button, .btn  {
+    font-family: monospace;
+    font-size: medium;
+    font-weight: lighter;
+    font-style: italic;
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    background: azure;
+    color: #262626;
+    width: 150px;
+}
+
+.btn, button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+}
+
+button:hover, .btn:hover {
+    background-color: green;
+}
+
+.btn-container {
+    display: flex;
+    gap: 1rem;
+}
+
+span {
+    width: fit-content;
+}
