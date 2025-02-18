@@ -3,12 +3,15 @@ using disney_battle.domain.cqs.commands;
 using disney_battle.domain.cqs.queries;
 using disney_battle.domain.services;
 using disney_battle.exceptions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 public class AuthController(IUserService userService, IConfiguration configuration) : ControllerBase
 {
     [HttpPost]
     [Route("/register")]
+    [EnableCors("auth-input")]
     public IActionResult Register([FromBody] RegistersUserCommand command)
     {
         ICommandResult result = userService.Execute(command);
@@ -21,6 +24,7 @@ public class AuthController(IUserService userService, IConfiguration configurati
 
     [HttpPost]
     [Route("/login")]
+    [EnableCors("auth-input")]
     public IActionResult Login([FromBody] LoginQuery query)
     {
 
@@ -51,6 +55,7 @@ public class AuthController(IUserService userService, IConfiguration configurati
 
     [HttpGet]
     [Route("/logout")]
+    [EnableCors("auth-input")]
     public IActionResult Logout()
     {
         try
@@ -64,6 +69,18 @@ public class AuthController(IUserService userService, IConfiguration configurati
             return BadRequest(ICommandResult.Failure(e.Message));
         }
 
+    }
+
+    [HttpGet]
+    [Route("/auth")]
+    [EnableCors("auth-input")]
+    [Authorize]
+    public IActionResult Auth()
+    {
+        int.TryParse(User.FindFirst("id")?.Value, out int id);
+        var result = new {id=id,email =User.FindFirst("email")?.Value};
+
+        return Ok(result);
     }
 }
 
