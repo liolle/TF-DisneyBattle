@@ -1,0 +1,17 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<div class="home-container">
+    <Navbar />
+    <div class="main">
+        @if (@CurrentUser is not null)
+        {
+            <button >Join Game</button>
+        }
+    </div>
+
+</div>

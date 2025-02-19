@@ -15,7 +15,6 @@
     height: 100%;
 }
 
-
 .form-main {
     height: 100%;
     background-color: #262626;
@@ -54,15 +53,13 @@ label {
     width: 100%;
 }
 
-.form-input  label{
-    width: 100px;
-    
-}
 
 .form-input {
     display: flex;
+    flex-direction: column;
     gap: 0.25rem;
     height: 2rem;
+    font-size: .75rem;
 }
 
 .input {
