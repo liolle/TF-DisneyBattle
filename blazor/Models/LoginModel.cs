@@ -21,7 +21,7 @@ public class LoginResult
 
     public string? ErrorMessage { get; set; }
 
-    public string Result { get; set; }
+    public string? Result { get; set; }
 
     public string? Exception { get; } 
 }

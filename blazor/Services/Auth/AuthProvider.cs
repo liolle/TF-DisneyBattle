@@ -12,7 +12,7 @@ public class AuthProvider(IAuthService service) : AuthenticationStateProvider
         ClaimsIdentity identity = new();
         User? user = service.GetUser();
 
-        for (int i = 0; i<8; i++)
+        for (int i = 0; i<10; i++)
         {
             int round = (int) Math.Ceiling(Math.Pow(2, i));
             await Task.Delay(round);

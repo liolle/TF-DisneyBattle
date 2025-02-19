@@ -8,20 +8,21 @@ using Microsoft.AspNetCore.Components;
 public partial class Navbar : ComponentBase
 {
     [Inject]
-    public IAuthService Service {get;set;}
+    public IAuthService? Service {get;set;}
     [Inject]
-    private NavigationManager Navigation {get;set;}
+    private NavigationManager? Navigation {get;set;}
     public bool IsConnected { get; set; }
 
-    public async Task Login()
+    public void Login()
     {
-        Navigation.NavigateTo("/login");
+        Navigation?.NavigateTo("/login");
     }
 
     public async Task Logout()
     {
+        if (Service is null){return;}
         await Service.Logout();
-        Navigation.Refresh(true);
+        Navigation?.Refresh(true);
         await Task.Delay(50);
         StateHasChanged();
     }

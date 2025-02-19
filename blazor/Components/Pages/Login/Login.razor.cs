@@ -9,18 +9,19 @@ public partial class Login : ComponentBase
     public LoginModel Model { get; set; } = new();
 
     [Inject]
-    public IAuthService Service {get;set;}
+    public IAuthService? Service {get;set;}
     [Inject]
-    private NavigationManager Navigation {get;set;}
+    private NavigationManager? Navigation {get;set;}
 
     private async Task SubmitValidFrom (){
+        if (Service is null){return;}
        bool result = await Service.Login(Model);
        if (!result) {return;}
        await Task.Delay(50);
-       Navigation.NavigateTo("/");
+       Navigation?.NavigateTo("/",true);
     }
 
-    public async Task Register (){
-        Navigation.NavigateTo("/register");
+    public void Register (){
+        Navigation?.NavigateTo("/register");
     }
 }
