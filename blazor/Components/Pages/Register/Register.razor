@@ -2,7 +2,15 @@
 @using blazor.models
 
 <div class="form-main">
-    <EditForm Model="Model" OnValidSubmit="SubmitValidFrom">
+    <div class="link-container">
+        <div @onclick="GoToLoginPage" class="link">
+            <span>
+                <span>&lt;</span>
+                <span>Login</span>
+            </span>
+        </div>
+    </div>
+    <EditForm class="form" Model="Model" OnValidSubmit="SubmitValidFrom">
         <div class="form-container">
             <DataAnnotationsValidator />
 

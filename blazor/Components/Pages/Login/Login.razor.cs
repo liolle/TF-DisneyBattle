@@ -21,7 +21,7 @@ public partial class Login : ComponentBase
        Navigation?.NavigateTo("/",true);
     }
 
-    public void Register (){
-        Navigation?.NavigateTo("/register");
+    public void GoToRegisterPage(){
+        Navigation?.NavigateTo("/register",false,true);
     }
 }

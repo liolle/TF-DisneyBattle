@@ -2,6 +2,14 @@
 @using blazor.models
 
 <div class="form-main">
+    <div class="link-container">
+        <div @onclick="GoToRegisterPage" class="link">
+            <span>
+                <span>Register</span>
+                <span>&gt;</span>
+            </span>
+        </div>
+    </div>
     <EditForm Model="Model" OnValidSubmit="SubmitValidFrom">
         <div class="form-container">
             <DataAnnotationsValidator />
@@ -30,9 +38,6 @@
                 <button type="submit" class="btn">
                     <span>Login</span>
                 </button>
-                <div @onclick="Register" class="btn">
-                    <span>Register</span>
-                </div>
             </div>
 
         </div>

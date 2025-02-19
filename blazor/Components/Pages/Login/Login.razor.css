@@ -1,3 +1,4 @@
+  
 .form-main {
     height: 100%;
     background-color: #262626;
@@ -5,20 +6,28 @@
     font-family: monospace;
     font-size:1rem;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-style: italic;
+    font-size: 1rem;
     user-select: none;
     font-weight: bold;
+    gap: 2rem;
+}
+
+label {
+    display: flex;
+    align-items: center;
 }
 
 .form-container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
     justify-content: center;
     align-items: center;
-    width: 500px;
+    width: 300px;
 }
 
 .form-element {
@@ -35,8 +44,7 @@
 
 .form-input {
     display: flex;
-    gap: 10px;
-    
+    gap: 0.25rem;
     height: 2rem;
 }
 
@@ -48,6 +56,7 @@
     font-size: medium;
     font-weight: lighter;
     font-style: italic;
+    color: red;
     height: 1rem;
 }
 
@@ -87,6 +96,22 @@ button:hover, .btn:hover {
     gap: 1rem;
 }
 
-span {
+
+.link-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 300px;
+    gap: .25rem;
+}
+
+.link {
     width: fit-content;
+    font-size: 11px;
+    gap: .25rem;
+}
+
+.link span:hover {
+    cursor: pointer;
+    text-decoration-line: underline;
+    color: green;
 }

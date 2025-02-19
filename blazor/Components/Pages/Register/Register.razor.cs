@@ -7,6 +7,7 @@ namespace blazor.Components.Pages.Register;
 
 public partial class Register : ComponentBase
 {
+    public string Home {get;} = "/";
     public RegisterModel Model { get; set; } = new();
 
     [Inject]
@@ -21,5 +22,10 @@ public partial class Register : ComponentBase
         if (!result) { return; }
         await Task.Delay(50);
         Navigation?.NavigateTo("/login");
+    }
+
+
+    public void GoToLoginPage(){
+        Navigation?.NavigateTo("/login",false,true);
     }
 }
