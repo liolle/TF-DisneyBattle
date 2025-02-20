@@ -12,6 +12,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5032") });
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddTransient<AuthenticationStateProvider,AuthProvider>();
+builder.Services.AddSignalR();
+builder.Services.AddScoped<IMatchHubService,MatchHubService>();
+builder.Services.AddScoped<MatchService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +32,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapHub<MatchHubService>("/match_hub");
 
 app.UseStatusCodePagesWithRedirects("/404");
 
