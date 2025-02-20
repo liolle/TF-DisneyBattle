@@ -64,7 +64,7 @@ public class UserService(IDataContext context, IHashService hashService, IJwtSer
             }
             return IQueryResult<UserEntity?>.Failure($"Could not find UserName {query.UserName}");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return IQueryResult<UserEntity?>.Failure("Server error");
         }

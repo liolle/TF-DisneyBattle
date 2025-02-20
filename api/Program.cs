@@ -70,6 +70,7 @@ builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 builder.Services.AddScoped<IJwtService,JwtService>();
 builder.Services.AddScoped<IHashService,HashService>();
 builder.Services.AddTransient<IUserService,UserService>();
+builder.Services.AddTransient<IGameService,GameService>();
 
 var app = builder.Build();
 
