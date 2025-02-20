@@ -21,3 +21,19 @@ BEGIN
         CONSTRAINT U_user_user_name UNIQUE([user_name])
     );
 END
+
+IF OBJECT_ID('Personages', 'U') IS NULL
+BEGIN
+
+    CREATE TABLE [Personages](
+        [id]            [int] IDENTITY(1,1) NOT NULL,
+        [name]          [nvarchar](100) NOT NULL,
+        [base_hp]       [int] NOT NULL,
+        [base_atk]      [int] NOT NULL,
+        [base_def]      [int] NOT NULL,
+
+        CONSTRAINT PK_personages_id PRIMARY KEY CLUSTERED([id]),
+        CONSTRAINT U_personage_name UNIQUE([name])
+    );
+END
+

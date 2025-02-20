@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
+namespace disney_battle.api.controller;
+
 public class AuthController(IUserService userService, IConfiguration configuration) : ControllerBase
 {
     [HttpPost]
