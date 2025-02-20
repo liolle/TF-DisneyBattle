@@ -72,6 +72,11 @@ public partial class Navbar : ComponentBase
         Navigation?.NavigateTo("/login");
     }
 
+    public void NavigateToPersonage()
+    {
+        Navigation?.NavigateTo("/personages");
+    }
+
     public void NavigateToHomePage()
     {
         Navigation?.NavigateTo("/");

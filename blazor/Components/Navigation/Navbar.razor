@@ -14,7 +14,19 @@
                 </svg>
             </div>
         </div>
-        <div class="navbar-center"></div>
+        <div class="navbar-center">
+            <div @onclick="NavigateToPersonage">
+                @if (@Page == "personages")
+                {
+                    <span class="nav-link active-link">Personages</span>
+                }
+                else
+                {
+                    <span class="nav-link">Personages</span>
+                }
+
+            </div>
+        </div>
         <div class="navbar-right">
             @if (@LogButtonShowing)
             {

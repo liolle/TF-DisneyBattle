@@ -44,3 +44,10 @@ window.logout = async () => {
     return "";
 };
 
+window.allPersonage = async ()=>{
+    const response = await fetch('http://localhost:5032/personage/all', {});
+    if (!response.ok){return []}
+    const body = await response.json()
+    return body;
+}
+

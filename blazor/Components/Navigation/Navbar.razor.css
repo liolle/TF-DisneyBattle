@@ -24,6 +24,7 @@
     align-items: center;
     padding-left: 1rem;
     padding-right: 1rem;
+    gap: 1rem;
 }
 
 
@@ -81,3 +82,22 @@ button:hover, .btn:hover {
     color: azure;
 }
 
+.navbar-center {
+    flex: 1;
+}
+
+.nav-link {
+    font-size:1rem;
+    font-style: italic;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-link:hover {
+    color: green;
+}
+
+.active-link {
+    color: green;
+    text-decoration-line: underline;
+}

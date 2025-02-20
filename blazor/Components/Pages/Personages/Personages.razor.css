@@ -1,0 +1,40 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.card-container {
+    border: 1px solid azure;
+    border-radius: 1rem;
+    padding: .5rem;
+    width: 150px;
+    height: 110px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.card-container:hover {
+    border: 1px solid green;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 1rem;
+}
+
+.main-div {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
