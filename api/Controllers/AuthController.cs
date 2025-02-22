@@ -40,7 +40,7 @@ public class AuthController(IUserService userService, IConfiguration configurati
                 {
                     Redirect(query.Redirect_Failure_Uri);
                 }
-                return BadRequest(result);
+                return BadRequest(result.ErrorMessage);
             }
 
             var cookieOptions = new CookieOptions
