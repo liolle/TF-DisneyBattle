@@ -52,7 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options=>{
     options.AddPolicy("auth-input", policy=>{
         policy
-        .WithOrigins(["http://localhost:5079","http://localhost"])
+        .WithOrigins(["http://localhost:5079","https://localhost:7145"])
         .AllowCredentials()
         .AllowAnyHeader()
         .AllowAnyMethod();
@@ -65,6 +65,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Services 
+builder.Services.AddScoped<HttpClient>();
 builder.Services.AddScoped<IDataContext,DataContext>();
 builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 builder.Services.AddScoped<IJwtService,JwtService>();

@@ -19,7 +19,7 @@ public class PersonageEntity
 
     public static PersonageEntity Create(int id, string name, int baseHp, int baseAtk, int baseDef)
     {
-        return new PersonageEntity(id,name,baseHp,baseAtk,baseAtk);
+        return new PersonageEntity(id,name,baseHp,baseAtk,baseDef);
     }
 
 }

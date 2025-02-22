@@ -27,7 +27,7 @@ public class AuthController(IUserService userService, IConfiguration configurati
     [HttpPost]
     [Route("/login")]
     [EnableCors("auth-input")]
-    public IActionResult Login([FromBody] LoginQuery query)
+    public IActionResult Login([FromBody] CredentialLoginQuery query)
     {
 
         try
@@ -36,6 +36,10 @@ public class AuthController(IUserService userService, IConfiguration configurati
             QueryResult<string> result = userService.Execute(query);
             if (result.IsFailure)
             {
+                if (query.Redirect_Failure_Uri is not null)
+                {
+                    Redirect(query.Redirect_Failure_Uri);
+                }
                 return BadRequest(result);
             }
 
@@ -47,6 +51,10 @@ public class AuthController(IUserService userService, IConfiguration configurati
                 Expires = DateTime.UtcNow.AddHours(1)
             };
             Response.Cookies.Append(token_name, result.Result, cookieOptions);
+            if (query.Redirect_Success_Uri is not null)
+            {
+                Redirect(query.Redirect_Success_Uri);
+            }
             return Ok(result);
         }
         catch (Exception)
@@ -80,9 +88,40 @@ public class AuthController(IUserService userService, IConfiguration configurati
     public IActionResult Auth()
     {
         int.TryParse(User.FindFirst("id")?.Value, out int id);
-        var result = new {id=id,email =User.FindFirst("email")?.Value};
+        var result = new { id = id, email = User.FindFirst("email")?.Value };
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("/oauth/microsoft")]
+    public async Task<IActionResult> OauthMicrosoft([FromBody] OauthMicrosoftQuery query)
+    {
+        QueryResult<string> result = await userService.Execute(query);
+        CookieOptions cookieOptions = new()
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddMinutes(60)
+        };
+        if (result.IsFailure)
+        {
+            Response.Cookies.Append("test", "Failed", cookieOptions);
+            return Redirect(query.Redirect_Failure_Uri);
+        }
+
+
+        Response.Cookies.Append("test", result.Result, cookieOptions);
+
+        return Redirect($"{query.Redirect_Success_Uri}");
+    }
+
+    [HttpPost]
+    [Route("/oauth/google")]
+    public IActionResult OauthGoogle()
+    {
+        return Redirect("https://localhot:7145");
     }
 }
 

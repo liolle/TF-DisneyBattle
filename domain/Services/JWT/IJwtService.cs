@@ -1,8 +1,8 @@
-using disney_battle.dal.entities;
+using disney_battle.domain.services.models;
 
 namespace disney_battle.domain.services;
 
 public interface IJwtService
 {
-    public string generate(UserEntity user);
+    public string generate(CredentialInfoModel user);
 }

@@ -4,21 +4,17 @@ namespace disney_battle.dal.entities;
 public class UserEntity
 {
     public int Id {get;}
-    public string UserName {get;set;}
     public string Email {get;set;}
-    public string Password {get;set;}
-    public DateTime CreatedAt {get;}
+    public DateTime Created_At {get;}
 
-    internal UserEntity(int id, string userName, string email,string password,DateTime createdAt)
+    internal UserEntity(int id, string email,DateTime createdAt)
     {
         Id = id;
-        UserName = userName;
         Email = email;
-        Password = password;
-        CreatedAt = createdAt;
+        Created_At = createdAt;
     }
 
-    public static UserEntity Create(int id, string userName, string email,string password,DateTime createdAt){
-        return new UserEntity( id,  userName,  email, password, createdAt);
+    public static UserEntity Create(int id, string email, DateTime createdAt){
+        return new UserEntity( id,  email, createdAt);
     }
 }

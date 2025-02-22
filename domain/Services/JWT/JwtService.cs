@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using disney_battle.dal.entities;
+using disney_battle.domain.services.models;
 using disney_battle.exceptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
@@ -27,12 +27,12 @@ public class JwtService : IJwtService
         _audience = jwt_audience;
     }
 
-    public string generate(UserEntity user)
+    public string generate(CredentialInfoModel user)
     {
         List<Claim> claims =
         [
-            new(nameof(UserEntity.Id), user.Id.ToString()),    
-            new(nameof(UserEntity.Email), user.Email),                
+            new(nameof(CredentialInfoModel.Id), user.Id.ToString()),    
+            new(nameof(CredentialInfoModel.Email), user.Email),                
         ];
 
         // Standardized User info

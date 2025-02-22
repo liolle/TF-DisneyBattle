@@ -38,3 +38,10 @@ public interface IQueryHandler<TQuery,TResult>
 {
     QueryResult<TResult> Execute(TQuery query);
 }
+
+
+public interface IQueryHandlerAsync<TQuery,TResult> 
+    : IQueryDefinition<TResult> where TQuery : IQueryDefinition<Task<TResult>>
+{
+    Task<QueryResult<TResult>> Execute(TQuery query);
+}
