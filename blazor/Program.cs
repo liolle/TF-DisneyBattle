@@ -19,6 +19,7 @@ builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IMatchHubService,MatchHubService>();
 builder.Services.AddScoped<MatchService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

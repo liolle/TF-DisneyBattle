@@ -12,7 +12,6 @@ public class AuthService : IAuthService
 
     public AuthService(IJSRuntime jS){
         JS = jS;
-        _=Auth();
     }
 
     public User? GetUser()
@@ -50,8 +49,8 @@ public class AuthService : IAuthService
         await JS.InvokeAsync<string>("logout");
     }
 
-    public Task MicrosoftLogin()
+    public async Task MicrosoftLogin(string code,string redirect_success_uri,string redirect_failure_uri)
     {
-        throw new NotImplementedException();
+        await JS.InvokeVoidAsync("microsoftOauth",code,redirect_success_uri,redirect_failure_uri);
     }
 }

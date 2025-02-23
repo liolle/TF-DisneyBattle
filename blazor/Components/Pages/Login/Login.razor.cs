@@ -12,13 +12,16 @@ public partial class Login : ComponentBase
     private IAuthService? Service { get; set; }
 
     [Inject]
+    private IConfiguration? configuration { get; set; }
+
+    [Inject]
     private NavigationManager? Navigation { get; set; }
 
     private async Task SubmitValidFrom()
     {
-        if (Service is null){return;}
+        if (Service is null) { return; }
         bool result = await Service.CredentialLogin(Model);
-        if (!result) {return;}
+        if (!result) { return; }
         Navigation?.NavigateTo("/", true);
     }
 
@@ -30,10 +33,17 @@ public partial class Login : ComponentBase
     public void MicrosoftLogin()
     {
 
-        string scope = "openid profile api://b86508f5-448b-4789-ba1d-286d6c115ea1/default";
-        string redirect_uri = "https://localhost:7145";
+        string? redirect_uri = configuration?["REDIRECT_URI"];
+        string? scope = configuration?["SCOPE"];
+        string? tenant_id = configuration?["MICROSOFT_TENANT_ID"];
+        string? client_id = configuration?["MICROSOFT_CLIENT_ID"];
 
-        string URL = $"https://login.microsoftonline.com/9c523e69-1868-4f28-826a-993ddf8f33a8/oauth2/v2.0/authorize?client_id=b86508f5-448b-4789-ba1d-286d6c115ea1&response_type=token&redirect_uri={redirect_uri}&scope={scope}";
+        if (tenant_id is null || client_id is null || scope is null || redirect_uri is null){
+            Console.WriteLine("Missing configurations");
+            return;
+        }
+
+        string URL = $"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/authorize?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&response_mode=query&scope={scope}";
 
         Navigation?.NavigateTo(URL, false, false);
     }

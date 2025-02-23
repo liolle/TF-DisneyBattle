@@ -51,3 +51,20 @@ window.allPersonage = async ()=>{
     return body;
 }
 
+window.microsoftOauth = async (code,redirect_success_uri,redirect_failure_uri)=>{
+    const response = await fetch('http://localhost:5032/oauth/microsoft', {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "http://localhost:5032"
+        },
+        body: JSON.stringify({
+            code: code,
+            redirect_success_uri: redirect_success_uri,
+            redirect_failure_uri: redirect_failure_uri
+        })
+    });
+    
+}
+
