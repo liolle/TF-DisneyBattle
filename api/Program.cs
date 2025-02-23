@@ -52,7 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options=>{
     options.AddPolicy("auth-input", policy=>{
         policy
-        .WithOrigins(["http://localhost:5079","https://localhost:7145"])
+        .WithOrigins(["https://localhost:7145","https://localhost:7145/"])
         .AllowCredentials()
         .AllowAnyHeader()
         .AllowAnyMethod();

@@ -74,9 +74,9 @@ public class AuthController(IUserService userService, IConfiguration configurati
             Response.Cookies.Delete(token_name);
             return Ok(ICommandResult.Success());
         }
-        catch (Exception )
+        catch (Exception)
         {
-           return BadRequest("Server error");
+            return BadRequest("Server error");
         }
 
     }
@@ -95,6 +95,7 @@ public class AuthController(IUserService userService, IConfiguration configurati
 
     [HttpPost]
     [Route("/oauth/microsoft")]
+    [EnableCors("auth-input")]
     public async Task<IActionResult> OauthMicrosoft([FromBody] OauthMicrosoftQuery query)
     {
         try
@@ -102,8 +103,9 @@ public class AuthController(IUserService userService, IConfiguration configurati
             string? token_name = configuration["AUTH_TOKEN_NAME"] ?? throw new MissingConfigurationException("AUTH_TOKEN_NAME");
             QueryResult<string> result = await userService.Execute(query);
 
-            if (result.IsFailure && query.Redirect_Failure_Uri is not null){
-                return Redirect(query.Redirect_Failure_Uri);
+            if (result.IsFailure && query.Redirect_Failure_Uri is not null)
+            {
+                return BadRequest(result.ErrorMessage);
 
             }
 
@@ -121,14 +123,11 @@ public class AuthController(IUserService userService, IConfiguration configurati
             };
 
             Response.Cookies.Append(token_name, result.Result, cookieOptions);
-            if (query.Redirect_Success_Uri is not null){
-                return Redirect($"{query.Redirect_Success_Uri}");
-            }
 
             return Ok();
 
         }
-        catch (Exception )
+        catch (Exception)
         {
             return BadRequest("Server error");
         }

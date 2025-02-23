@@ -1,6 +1,5 @@
 using System.Net.Http.Json;
 using disney_battle.cqs;
-using disney_battle.dal.entities;
 using disney_battle.domain.cqs.queries;
 using disney_battle.domain.services.models;
 using disney_battle.exceptions;
@@ -34,6 +33,7 @@ public partial class UserService
                 })
             );
 
+
             MicrosoftTokenModel? res = await tokenResponse.Content.ReadFromJsonAsync<MicrosoftTokenModel>();
 
             if (res is null)
@@ -43,7 +43,7 @@ public partial class UserService
             
             return IQueryResult<string>.Success(jwt.Generate(res.GetClaims(this)));
         }
-        catch (Exception e)
+        catch (Exception )
         {
             return IQueryResult<string>.Failure("Server error");
         }

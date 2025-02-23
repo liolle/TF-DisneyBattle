@@ -10,15 +10,18 @@ public partial class Navbar : ComponentBase
 {
 
     [Inject]
-    private IAuthService? Service {get;set;}
+    private IAuthService? Service { get; set; }
 
     [Inject]
     private NavigationManager? Navigation { get; set; }
     public bool IsConnected { get; set; }
 
+    [Inject]
+    private IConfiguration configuration {get;set;}
+
+    private string Provider = "credential";
 
 
-    User? CurrentUser { get; set; } = null;
     public string Page { get; private set; } = "";
     bool LogButtonShowing
     {
@@ -42,6 +45,17 @@ public partial class Navbar : ComponentBase
     {
         SetPage();
         StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            Provider = user.FindFirst("Provider")?.Value ?? "credential";
+        }
     }
 
     private void SetPage()
@@ -74,9 +88,20 @@ public partial class Navbar : ComponentBase
 
     public async Task Logout()
     {
-        if (Service is null) { return; }
+        string? post_logout_redirect_uri = configuration["POST_REDIRECT_URI"];
+        if (Service is null || post_logout_redirect_uri is null) { return; }
+
         await Service.Logout();
-        Navigation?.Refresh();
+        switch (Provider)
+        {
+            case "microsoft":
+                Navigation?.NavigateTo($"https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri={post_logout_redirect_uri}");
+                break;
+            default:
+                Navigation?.Refresh();
+                break;
+        }
+
     }
 
 }

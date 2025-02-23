@@ -30,8 +30,9 @@ public class AuthProvider(IHttpContextAccessor httpContextAccessor) : Authentica
 
         string? email = jsonToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
         string? id = jsonToken.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+        string? provider = jsonToken.Claims.FirstOrDefault(c => c.Type == "Provider")?.Value;
 
-        if (email is null || id == null)
+        if (email is null || id is null || provider is null)
         {
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
@@ -39,9 +40,10 @@ public class AuthProvider(IHttpContextAccessor httpContextAccessor) : Authentica
         List<Claim> claims =
         [
             new (nameof(User.Id), id),
-            new (nameof(User.Email), email)
+            new (nameof(User.Email), email),
+            new ("Provider", provider)
         ];
-        ClaimsIdentity identity = new ClaimsIdentity(claims, "cookieAuth");
+        ClaimsIdentity identity = new(claims, "cookieAuth");
 
         return new AuthenticationState(new ClaimsPrincipal(identity));
     }

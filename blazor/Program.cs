@@ -1,8 +1,17 @@
 using blazor.Components;
 using blazor.services;
+using DotNetEnv;
 using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
+// Add Env &  Json configuration
+Env.Load();
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
