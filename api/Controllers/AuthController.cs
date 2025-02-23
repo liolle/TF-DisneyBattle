@@ -53,7 +53,7 @@ public class AuthController(IUserService userService, IConfiguration configurati
             Response.Cookies.Append(token_name, result.Result, cookieOptions);
             if (query.Redirect_Success_Uri is not null)
             {
-                Redirect(query.Redirect_Success_Uri);
+                return Redirect(query.Redirect_Success_Uri);
             }
             return Ok(result);
         }
@@ -74,9 +74,9 @@ public class AuthController(IUserService userService, IConfiguration configurati
             Response.Cookies.Delete(token_name);
             return Ok(ICommandResult.Success());
         }
-        catch (Exception e)
+        catch (Exception )
         {
-            return BadRequest(ICommandResult.Failure(e.Message));
+           return BadRequest("Server error");
         }
 
     }
@@ -97,31 +97,48 @@ public class AuthController(IUserService userService, IConfiguration configurati
     [Route("/oauth/microsoft")]
     public async Task<IActionResult> OauthMicrosoft([FromBody] OauthMicrosoftQuery query)
     {
-        QueryResult<string> result = await userService.Execute(query);
-        CookieOptions cookieOptions = new()
+        try
         {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddMinutes(60)
-        };
-        if (result.IsFailure)
-        {
-            Response.Cookies.Append("test", "Failed", cookieOptions);
-            return Redirect(query.Redirect_Failure_Uri);
+            string? token_name = configuration["AUTH_TOKEN_NAME"] ?? throw new MissingConfigurationException("AUTH_TOKEN_NAME");
+            QueryResult<string> result = await userService.Execute(query);
+
+            if (result.IsFailure && query.Redirect_Failure_Uri is not null){
+                return Redirect(query.Redirect_Failure_Uri);
+
+            }
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            CookieOptions cookieOptions = new()
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddMinutes(60)
+            };
+
+            Response.Cookies.Append(token_name, result.Result, cookieOptions);
+            if (query.Redirect_Success_Uri is not null){
+                return Redirect($"{query.Redirect_Success_Uri}");
+            }
+
+            return Ok();
+
         }
-
-
-        Response.Cookies.Append("test", result.Result, cookieOptions);
-
-        return Redirect($"{query.Redirect_Success_Uri}");
+        catch (Exception )
+        {
+            return BadRequest("Server error");
+        }
     }
 
     [HttpPost]
     [Route("/oauth/google")]
     public IActionResult OauthGoogle()
     {
-        return Redirect("https://localhot:7145");
+        return Ok();
     }
 }
 

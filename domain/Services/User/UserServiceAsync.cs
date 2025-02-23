@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using disney_battle.cqs;
+using disney_battle.dal.entities;
 using disney_battle.domain.cqs.queries;
 using disney_battle.domain.services.models;
 using disney_battle.exceptions;
@@ -8,6 +9,9 @@ namespace disney_battle.domain.services;
 
 public partial class UserService
 {
+
+
+
     public async Task<QueryResult<string>> Execute(OauthMicrosoftQuery query)
     {
 
@@ -30,16 +34,16 @@ public partial class UserService
                 })
             );
 
-            var res = await tokenResponse.Content.ReadFromJsonAsync<MicrosoftTokenModel>();
+            MicrosoftTokenModel? res = await tokenResponse.Content.ReadFromJsonAsync<MicrosoftTokenModel>();
 
             if (res is null)
             {
                 return IQueryResult<string>.Failure("Authentication failed");
             }
-
-            return IQueryResult<string>.Success(res.Access_Token);
+            
+            return IQueryResult<string>.Success(jwt.Generate(res.GetClaims(this)));
         }
-        catch (Exception)
+        catch (Exception e)
         {
             return IQueryResult<string>.Failure("Server error");
         }

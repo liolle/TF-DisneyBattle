@@ -44,9 +44,7 @@ BEGIN
         [provider_id]	[nvarchar](100),
 
         CONSTRAINT PK_account_id PRIMARY KEY CLUSTERED([id]),
-        CONSTRAINT FK_account_user_id FOREIGN KEY ([user_id]) REFERENCES Users([id])
-        	ON DELETE CASCADE 
-			ON UPDATE CASCADE,
+
 		CONSTRAINT CK_account_provider_or_user_id CHECK(
 			provider_id IS NOT NULL OR user_id IS NOT NULL
 		),

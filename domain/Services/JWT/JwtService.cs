@@ -27,16 +27,11 @@ public class JwtService : IJwtService
         _audience = jwt_audience;
     }
 
-    public string generate(CredentialInfoModel user)
+    public string Generate(List<Claim> claims)
     {
-        List<Claim> claims =
-        [
-            new(nameof(CredentialInfoModel.Id), user.Id.ToString()),    
-            new(nameof(CredentialInfoModel.Email), user.Email),                
-        ];
 
         // Standardized User info
-        ClaimsIdentity identity = new(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+        ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         ClaimsPrincipal principal = new(identity);
 
         // Token signing info
@@ -46,10 +41,11 @@ public class JwtService : IJwtService
         JwtSecurityToken token = new(
             issuer: _issuer,
             audience: _audience,
-            claims: principal.Claims, 
+            claims: principal.Claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials
         );
-        return new JwtSecurityTokenHandler().WriteToken(token); 
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 }

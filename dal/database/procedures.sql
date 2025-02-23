@@ -60,8 +60,6 @@ CREATE PROCEDURE GetUserCredentialInfo
     @UserName VARCHAR(50)
 AS
 BEGIN
-    DECLARE @AccountId INT;
-
     SELECT 
         u.id,
         u.email,
@@ -72,4 +70,39 @@ BEGIN
     LEFT JOIN [Users] u ON u.id = acc.user_id
     WHERE cred.user_name = @UserName
 
+END;
+
+
+IF OBJECT_ID('dbo.GetOrCreateAccount', 'P') IS NOT NULL
+BEGIN
+    DROP PROCEDURE dbo.GetOrCreateAccount;
+END
+
+GO;
+
+CREATE PROCEDURE GetOrCreateAccount
+    @Provider NVARCHAR(50),
+    @UserId INT,
+    @ProviderId NVARCHAR(100)
+AS
+BEGIN
+    DECLARE @AccountId INT;
+
+    SELECT @AccountId = id 
+    FROM Accounts 
+    WHERE provider = @Provider
+      AND (
+          (@Provider = 'credential' AND user_id = @UserId) 
+          OR (@Provider != 'credential' AND provider_id = @ProviderId)
+      );
+
+    IF @AccountId IS NULL
+    BEGIN
+        INSERT INTO Accounts ([provider], [provider_id], [user_id])
+        VALUES (@Provider, @ProviderId, @UserId);
+
+        SET @AccountId = SCOPE_IDENTITY();
+    END
+
+    SELECT * FROM Accounts WHERE id = @AccountId;
 END;
