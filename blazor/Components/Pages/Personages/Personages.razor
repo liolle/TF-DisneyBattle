@@ -1,4 +1,5 @@
 @page "/personages"
+@using Microsoft.AspNetCore.Components.Authorization
 @using blazor.models
 @rendermode InteractiveServer
 
@@ -8,19 +9,26 @@
     <Navbar />
     <div class="main">
         <div class="main-div ">
-            @foreach (Personage personage in Per)
-            {
-                <div class="card-container">
-                    <div class="card">
-                        <div><strong>@personage.Name</strong></div>
-                        <div>Hp: @personage.BaseHp</div>
-                        <div>Atk: @personage.BaseAtk</div>
-                        <div>Def: @personage.BaseDef</div>
-                    </div>
-                </div>
-            }
-
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <div>
+                            Login to see the Characters
+                        </div>
+                    </NotAuthorized>
+                    <Authorized>
+                        @foreach (Personage personage in Per)
+                        {
+                            <div class="card-container">
+                                <div class="card">
+                                    <div><strong>@personage.Name</strong></div>
+                                    <div>Hp: @personage.BaseHp</div>
+                                    <div>Atk: @personage.BaseAtk</div>
+                                    <div>Def: @personage.BaseDef</div>
+                                </div>
+                            </div>
+                        }
+                    </Authorized>
+                </AuthorizeView>
         </div>
     </div>
-
 </div>

@@ -30,14 +30,14 @@
         <div class="navbar-right">
             @if (@LogButtonShowing)
             {
-                @if (@CurrentUser is not null)
-                {
-                    <button @onclick="@Logout">Logout</button>
-                }
-                else
-                {
-                    <button @onclick="@Login">Login</button>
-                }
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <button @onclick="@Login">Login</button>
+                    </NotAuthorized>
+                    <Authorized>
+                        <button @onclick="@Logout">Logout</button>
+                    </Authorized>
+                </AuthorizeView>
             }
         </div>
 

@@ -129,3 +129,9 @@ button:hover, .btn:hover {
     text-decoration-line: underline;
     color: green;
 }
+
+.oauth-container {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+}

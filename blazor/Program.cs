@@ -8,11 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
+builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5032") });
-builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IGameService,GameService>();
 builder.Services.AddTransient<AuthenticationStateProvider,AuthProvider>();
+builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IMatchHubService,MatchHubService>();
 builder.Services.AddScoped<MatchService>();

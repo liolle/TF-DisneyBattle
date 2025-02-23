@@ -8,10 +8,11 @@
 <div class="home-container">
     <Navbar />
     <div class="main">
-        @if (@CurrentUser is not null)
-        {
-            <button @onclick="JoinGame" >Join Game</button>
-        }
-    </div>
 
+        <AuthorizeView>
+            <Authorized>
+                <button @onclick="JoinGame" >Join Game</button>
+            </Authorized>
+        </AuthorizeView>
+    </div>
 </div>
