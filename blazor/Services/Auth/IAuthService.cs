@@ -6,6 +6,7 @@ public interface IAuthService
 {
     User? GetUser();
     Task<bool> Register(RegisterModel model);
-    Task<bool> Login(LoginModel model);
+    Task<bool> CredentialLogin(LoginModel model);
+    Task MicrosoftLogin();
     Task Logout();
 }

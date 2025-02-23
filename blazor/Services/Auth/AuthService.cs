@@ -35,7 +35,7 @@ public class AuthService : IAuthService
         return true;
     }
 
-    public async Task<bool> Login(LoginModel model)
+    public async Task<bool> CredentialLogin(LoginModel model)
     {
         var response = await JS.InvokeAsync<LoginResult>("login", model.UserName, model.Password);
         if (response is null || response.IsFailure)
@@ -50,6 +50,8 @@ public class AuthService : IAuthService
         await JS.InvokeAsync<string>("logout");
     }
 
-
-
+    public Task MicrosoftLogin()
+    {
+        throw new NotImplementedException();
+    }
 }
