@@ -1,4 +1,4 @@
-#### 1: Blazor app redirect the user on the page 
+#### 1: Blazor app redirect the user
 
 ```C#
 string URL = $"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/authorize?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&response_mode=query&scope={scope}";		
