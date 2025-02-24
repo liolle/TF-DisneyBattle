@@ -55,7 +55,7 @@ public async Task<IActionResult> OauthMicrosoft([FromBody] OauthMicrosoftQuery q
 ```
 
 #### 3: The API exchange the code for a token 
-This token contain all information need to uniquely identify the user in my database. 
+This token contain all information need to uniquely identify an account in my database. 
 ```C#
 var tokenResponse = await httpClient.PostAsync(
 $"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
