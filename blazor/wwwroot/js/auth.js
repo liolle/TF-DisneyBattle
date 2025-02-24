@@ -45,8 +45,16 @@ window.logout = async () => {
 };
 
 window.allPersonage = async ()=>{
-    const response = await fetch('http://localhost:5032/personage/all', {});
-    if (!response.ok){return []}
+    const response = await fetch('http://localhost:5032/personage/all', {
+        credentials: 'include'
+    });
+    if (!response.ok){return {
+        isSuccess: false,
+        isFailure:true,
+        errorMessage: "",
+        exception : null,
+        result:[]
+    }}
     const body = await response.json()
     return body;
 }

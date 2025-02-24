@@ -121,7 +121,7 @@ public partial class UserService(IDataContext context, IHashService hashService,
             }
             return IQueryResult<AccountEntity>.Failure($"Server error");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return IQueryResult<AccountEntity>.Failure("Server error");
         }

@@ -6,7 +6,7 @@ namespace blazor.services;
 
 public class MatchService
 {
-    public event Action<GameMatch, Player> MatchFound;
+    public event Action<GameMatch, Player>? MatchFound;
     private readonly IHubContext<MatchHubService> _hubContext;
 
     public MatchService(IHubContext<MatchHubService> hubContext)

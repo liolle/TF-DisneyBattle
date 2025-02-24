@@ -17,7 +17,7 @@ public partial class Navbar : ComponentBase
     public bool IsConnected { get; set; }
 
     [Inject]
-    private IConfiguration configuration {get;set;}
+    private IConfiguration? configuration {get;set;}
 
     private string Provider = "credential";
 
@@ -88,6 +88,7 @@ public partial class Navbar : ComponentBase
 
     public async Task Logout()
     {
+        if (configuration is null){return;}
         string? post_logout_redirect_uri = configuration["POST_REDIRECT_URI"];
         if (Service is null || post_logout_redirect_uri is null) { return; }
 
