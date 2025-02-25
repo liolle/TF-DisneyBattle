@@ -1,3 +1,5 @@
+
+
 window.auth = async () => {
     const response = await fetch('http://localhost:5032/auth', {
         credentials: 'include'
@@ -44,22 +46,24 @@ window.logout = async () => {
     return "";
 };
 
-window.allPersonage = async ()=>{
+window.allPersonage = async () => {
     const response = await fetch('http://localhost:5032/personage/all', {
         credentials: 'include'
     });
-    if (!response.ok){return {
-        isSuccess: false,
-        isFailure:true,
-        errorMessage: "",
-        exception : null,
-        result:[]
-    }}
+    if (!response.ok) {
+        return {
+            isSuccess: false,
+            isFailure: true,
+            errorMessage: "",
+            exception: null,
+            result: []
+        }
+    }
     const body = await response.json()
     return body;
 }
 
-window.microsoftOauth = async (code,redirect_success_uri,redirect_failure_uri)=>{
+window.microsoftOauth = async (code, redirect_success_uri, redirect_failure_uri) => {
     const response = await fetch('http://localhost:5032/oauth/microsoft', {
         method: "POST",
         credentials: 'include',
@@ -73,6 +77,39 @@ window.microsoftOauth = async (code,redirect_success_uri,redirect_failure_uri)=>
             redirect_failure_uri: redirect_failure_uri
         })
     });
-    
+
 }
 
+window.initializeMatchService = (dotNetReference) => {
+    matchServiceReference = dotNetReference;
+};
+
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/match_hub")
+    .build();
+
+connection.start().then(() => {
+    console.log(`Connected to SignalR hub`);
+});
+
+connection.on("MatchFound", (match, player) => {
+    console.log(match, player)
+    // Call the .NET method to trigger the event
+    /*
+    if (matchServiceReference) {
+        matchServiceReference.invokeMethodAsync("NotifyMatchFound", match, player);
+    }
+        */
+});
+
+window.getConnectionId = () => {
+    return connection.connection.connectionId;
+};
+
+window.joinGame = async (player) => {
+    try {
+        await connection.invoke("AddPlayerAsync", player)
+    } catch (err) {
+        console.error(err)
+    }
+};

@@ -23,7 +23,6 @@ builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5032") });
 builder.Services.AddScoped<IGameService,GameService>();
-builder.Services.AddTransient<AuthenticationStateProvider,AuthProvider>();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IMatchHubService,MatchHubService>();
