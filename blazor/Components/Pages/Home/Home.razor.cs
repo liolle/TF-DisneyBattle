@@ -37,12 +37,12 @@ public partial class Home : ComponentBase
         Console.WriteLine($"Match found between: {gameMatch.P1} and {gameMatch.P2}");
     }
 
-    public async Task JoinGame()
+    public async Task SearchGame()
     {
         if (MatchService is null || CurrentUserId == 0 || Sending) { return; }
         Sending = true;
         await Task.Delay(50);
-        await MatchService.JoinMatchmakingAsync(CurrentUserId);
+        await MatchService.SearchGameAsync(CurrentUserId);
         Sending = false;
     }
 

@@ -16,6 +16,43 @@ public class Utils
                 return u;
             }
         }
-        return default; 
+        return default;
+    }
+}
+
+public class OwnedSemaphore
+{
+    private readonly SemaphoreSlim _semaphore;
+    private readonly HashSet<object> _owners;
+
+    public OwnedSemaphore(int initialCount, int maxCount)
+    {
+        _semaphore = new SemaphoreSlim(initialCount, maxCount);
+        _owners = new HashSet<object>();
+    }
+
+    public async Task WaitAsync()
+    {
+        int? CurrentId = Task.CurrentId;
+        if (CurrentId is null) { return; }
+
+        await _semaphore.WaitAsync();
+        lock (_owners)
+        {
+            _owners.Add(CurrentId);
+        }
+    }
+
+    public void Release()
+    {
+        int? CurrentId = Task.CurrentId;
+        if (CurrentId is null) { return; }
+        lock (_owners)
+        {
+            if (!_owners.Contains(CurrentId)){return;}
+
+            _semaphore.Release();
+            _owners.Remove(CurrentId);
+        }
     }
 }

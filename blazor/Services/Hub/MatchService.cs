@@ -32,11 +32,9 @@ public class MatchService : IDisposable
         MatchFound?.Invoke(match, player);
     }
 
-    public async Task JoinMatchmakingAsync(int playerId)
+    public async Task SearchGameAsync(int playerId)
     {
-        string? ConnectionId = await _jsRuntime.InvokeAsync<string>("getConnectionId");
-        if (ConnectionId is null) { return; }
-        await _jsRuntime.InvokeVoidAsync("joinGame", new Player(playerId, ConnectionId));
+        await _jsRuntime.InvokeVoidAsync("searchGame", playerId);
     }
 
     public void Dispose()

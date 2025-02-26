@@ -19,13 +19,13 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
-builder.Services.AddAuthorizationCore();
+builder.Services.AddSingleton<IConnectionManager,ConnectionManager>();
 
+builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5032") });
 builder.Services.AddScoped<IGameService,GameService>();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddSignalR();
-builder.Services.AddScoped<IMatchHubService,MatchHubService>();
 builder.Services.AddScoped<MatchService>();
 
 var app = builder.Build();
@@ -46,7 +46,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapHub<MatchHubService>("/match_hub");
+app.MapHub<ConnectionManager>("/match_hub");
 
 app.UseStatusCodePagesWithRedirects("/404");
 

@@ -88,9 +88,7 @@ const connection = new signalR.HubConnectionBuilder()
     .withUrl("/match_hub")
     .build();
 
-connection.start().then(() => {
-    console.log(`Connected to SignalR hub`);
-});
+connection.start().then(() => { });
 
 connection.on("MatchFound", (match, player) => {
     console.log(match, player)
@@ -106,10 +104,6 @@ window.getConnectionId = () => {
     return connection.connection.connectionId;
 };
 
-window.joinGame = async (player) => {
-    try {
-        await connection.invoke("AddPlayerAsync", player)
-    } catch (err) {
-        console.error(err)
-    }
-};
+window.searchGame = async (playerId) => {
+    connection.invoke("SearchGameAsync", playerId)
+}
