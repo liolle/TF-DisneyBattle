@@ -7,52 +7,80 @@ namespace blazor.services;
 
 public interface IConnectionManager
 {
-    public Task SearchGameAsync(int playerId);
+    public Task SearchGameAsync(int playerId, string connectionId);
 }
 
-public partial class ConnectionManager(IHubContext<ConnectionManager> hubContext) : Hub, IConnectionManager
+public class ConnectionHub(ConnectionManager connectionManager) : Hub
 {
-    private OwnedSemaphore Searching_semaphore = new(1, 1);
-    private OwnedSemaphore Playing_semaphore = new(1, 1);
-    private OwnedSemaphore Player_poll_semaphore = new(1, 1);
-    private OwnedSemaphore Match_semaphore = new(1, 1);
-    private HashSet<int> Searching_poll = [];
-    private HashSet<int> Playing_poll = [];
-    private Dictionary<int, PlayerConnectionContext> Player_poll = [];
-    private Dictionary<int, GameMatch> Match_poll = [];
-
-
-
-    public async Task SearchGameAsync(int playerId)
+    public async Task SearchGameAsync(int playerId, string connectionId)
     {
         try
         {
-            await Player_poll_semaphore.WaitAsync();
+            await connectionManager.Player_poll_semaphore.WaitAsync();
             // Get the player state context or create it
-            if (!Player_poll.TryGetValue(playerId, out PlayerConnectionContext? context))
+            if (!connectionManager.Player_poll.TryGetValue(playerId, out PlayerConnectionContext? context))
             {
-                PlayerConnectionContext playerConnectionContext = new(new PlayerSearching(), new Player(playerId,Context.ConnectionId));
+                PlayerConnectionContext playerConnectionContext = new(new PlayerLobby(), new Player(playerId, connectionId), connectionManager);
                 context = playerConnectionContext;
-                Player_poll.Add(playerId, context);
+                connectionManager.Player_poll.Add(playerId, context);
             }
 
-            // Not in a valid state to search for a game.
-            if (!context.SearchGame()) { return; }
-
-            await Searching_semaphore.WaitAsync();
-            Searching_poll.Add(playerId);
-            return;
+            _ = context.SearchGame();
         }
         finally
         {
-            Searching_semaphore.Release();
-            Player_poll_semaphore.Release();
+            connectionManager.Player_poll_semaphore.Release();
         }
     }
+}
+
+public partial class ConnectionManager 
+{
+    public OwnedSemaphore Searching_semaphore { get; } = new(1, 1);
+    public OwnedSemaphore Playing_semaphore { get; } = new(1, 1);
+    public OwnedSemaphore Player_poll_semaphore { get; } = new(1, 1);
+    public OwnedSemaphore Match_semaphore { get; } = new(1, 1);
+    public HashSet<int> Searching_poll { get; } = [];
+    public HashSet<int> Playing_poll { get; } = [];
+    public Dictionary<int, PlayerConnectionContext> Player_poll { get; } = [];
+    public Dictionary<int, GameMatch> Match_poll { get; } = [];
+
+    public ConnectionManager()
+    {
+        Console.WriteLine("Regenerate");
+    }
+
+
 };
 
 public partial class ConnectionManager
 {
+
+    public async Task<bool> JoinQueueAsync(int playerId)
+    {
+        try
+        {
+            await Searching_semaphore.WaitAsync();
+            if (Searching_poll.Count < 2) { return false; }
+            Random random = new();
+
+            List<int> players = [.. Searching_poll];
+            int p1 = random.Next(players.Count);
+            int p2;
+            do
+            {
+                p2 = random.Next(players.Count);
+            } while (p1 == p2);
+
+            Searching_poll.Remove(p1);
+            Searching_poll.Remove(p2);
+            return true;
+        }
+        finally
+        {
+            Searching_semaphore.Release();
+        }
+    }
     private async Task FindMatchUp()
     {
         try
@@ -115,12 +143,14 @@ public partial class ConnectionManager
                 return false;
             }
 
+            /*
 
-            await hubContext.Clients.Client(p1Context.Player.ConId)
-                .SendAsync("MatchFound", match);
+                        await _hubContext.Clients.Client(p1Context.Player.ConId)
+                            .SendAsync("MatchFound", match);
 
-            await hubContext.Clients.Client(p2Context.Player.ConId)
-                .SendAsync("MatchFound", match);
+                        await _hubContext.Clients.Client(p2Context.Player.ConId)
+                            .SendAsync("MatchFound", match);
+            */
 
             return true;
         }

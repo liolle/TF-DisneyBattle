@@ -105,5 +105,6 @@ window.getConnectionId = () => {
 };
 
 window.searchGame = async (playerId) => {
-    connection.invoke("SearchGameAsync", playerId)
+    console.log(playerId,connection.connection.connectionId)
+    connection.invoke("SearchGameAsync", playerId,connection.connection.connectionId)
 }

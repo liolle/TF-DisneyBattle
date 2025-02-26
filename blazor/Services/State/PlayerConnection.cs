@@ -1,25 +1,30 @@
+using System.Threading.Tasks;
 using blazor.models;
 
 namespace blazor.services.state;
 
-public class PlayerConnectionContext 
+public class PlayerConnectionContext
 {
     private PlayerConnectionState _state;
-    public Player Player {get;set;}
+    private ConnectionManager _connectionManager;
 
-    public PlayerConnectionContext(PlayerConnectionState state, Player player)
+    public Player Player { get; set; }
+
+    public PlayerConnectionContext(PlayerConnectionState state, Player player,ConnectionManager connectionManager)
     {
         _state = state;
+        _connectionManager = connectionManager;
         Player = player;
+        
     }
 
     public void TransitionTo(PlayerConnectionState state)
     {
         _state = state;
-        _state.SetContext(this);
+        _state.SetContext(this,_connectionManager);
     }
 
-    public bool SearchGame()
+    public Task<bool> SearchGame()
     {
         return _state.SearchGame();
     }
@@ -64,9 +69,11 @@ public class PlayerConnectionContext
 public abstract class PlayerConnectionState
 {
     protected PlayerConnectionContext? _context;
-    public void SetContext(PlayerConnectionContext context)
+    protected ConnectionManager? _connectionManager;
+    public void SetContext(PlayerConnectionContext context,ConnectionManager connectionManager)
     {
         _context = context;
+        _connectionManager = connectionManager;
     }
 
     public bool FoundDisconnect()
@@ -104,14 +111,18 @@ public abstract class PlayerConnectionState
         return false;
     }
 
-    public bool SearchGame()
+    public virtual async Task<bool> SearchGame()
     {
+        await Task.Delay(10);
         return false;
     }
 }
 
 public class PlayerSearching : PlayerConnectionState
 {
+    public PlayerSearching(){
+        Console.WriteLine(_context?.Player.ToString() ?? "No player");
+    }
 
 }
 
@@ -127,6 +138,16 @@ public class PlayerPlaying : PlayerConnectionState
 
 public class PlayerLobby : PlayerConnectionState
 {
+
+    public override async Task<bool> SearchGame()
+    {
+        PlayerConnectionContext? context = base._context;
+        ConnectionManager? connectionManager = base._connectionManager;
+        if (context is null || connectionManager is null){return false;}
+        await connectionManager.JoinQueueAsync(context.Player.id);
+        context.TransitionTo(new PlayerSearching());
+        return true;
+    }
 
 }
 
