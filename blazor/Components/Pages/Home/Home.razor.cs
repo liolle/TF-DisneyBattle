@@ -34,7 +34,7 @@ public partial class Home : ComponentBase
     }
 
     private void HandleMatchFound(GameMatch gameMatch, Player player){
-        Console.WriteLine($"Match found between: {gameMatch.P1} and {gameMatch.P2}");
+        Console.WriteLine($"Match found between: {gameMatch.player1} and {gameMatch.player2}");
     }
 
     public async Task SearchGame()

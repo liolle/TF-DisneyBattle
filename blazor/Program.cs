@@ -26,7 +26,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://
 builder.Services.AddScoped<IGameService,GameService>();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<MatchService>();
-Console.WriteLine("If this get regenerated, i will loose it");
 
 var app = builder.Build();
 
