@@ -38,9 +38,7 @@ public class PlayerMathFound : PlayerConnectionState
     {
         await Task.Delay(50);
         PlayerConnectionContext? context = _context;
-        ConnectionManager? connectionManager = _connectionManager;
-        if (context is null || connectionManager is null) { return false; }
-
+        if (context is null) { return false; }
         context.TransitionTo(new PlayerPlaying(match));
         return true;
     }
@@ -50,7 +48,7 @@ public class PlayerMathFound : PlayerConnectionState
         await Task.Delay(50);
         PlayerConnectionContext? context = _context;
         if (context is null ) { return false; }
-        context.TransitionTo(new PlayerTempDisconnection());
+        context.TransitionTo(new PlayerTempDisconnection(match));
         return true;
     }
 }

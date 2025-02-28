@@ -32,7 +32,7 @@ public class PlayerPlaying : PlayerConnectionState
         await Task.Delay(50);
         PlayerConnectionContext? context = _context;
         if (context is null ) { return false; }
-        context.TransitionTo(new PlayerTempDisconnection());
+        context.TransitionTo(new PlayerTempDisconnection(match));
         return true;
     }
 }

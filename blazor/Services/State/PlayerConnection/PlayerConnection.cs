@@ -19,6 +19,10 @@ public class PlayerConnectionContext
         TransitionTo(state);
     }
 
+    public bool IsSameType(Type type){
+        return _state.GetType() == type;
+    }
+
     public void TransitionTo(PlayerConnectionState state)
     {
         _state = state;

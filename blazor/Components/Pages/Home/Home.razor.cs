@@ -35,7 +35,6 @@ public partial class Home : ComponentBase
     private void HandleJoinGame(GameMatch gameMatch, Player player)
     {
         Sending = false;
-        Console.WriteLine("3\n");
         StateHasChanged();
     }
 

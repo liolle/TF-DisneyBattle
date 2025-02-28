@@ -22,7 +22,6 @@ public class MatchService : IDisposable
     [JSInvokable]
     public void NotifyJoinGame(GameMatch match, Player player)
     {
-        Console.WriteLine("2\n");
         JoinGame?.Invoke(match, player);
     }
 
