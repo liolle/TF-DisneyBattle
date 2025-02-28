@@ -11,7 +11,15 @@
 
         <AuthorizeView>
             <Authorized>
-                <button @onclick="SearchGame" >Join Game</button>
+                @if (!@Sending)
+                {
+                    <button @onclick="SearchGame">Join Game</button>
+
+                }
+                else
+                {
+                    <div>Loading...</div>
+                }
             </Authorized>
         </AuthorizeView>
     </div>

@@ -8,6 +8,7 @@ namespace blazor.services;
 public class MatchService : IDisposable
 {
     public event Action<GameMatch, Player>? MatchFound;
+    public event Action<GameMatch, Player>? JoinGame;
     private readonly IJSRuntime _jsRuntime;
     private DotNetObjectReference<MatchService>? _dotNetObjectReference;
 
@@ -27,9 +28,10 @@ public class MatchService : IDisposable
     }
 
     [JSInvokable]
-    public void NotifyMatchFound(GameMatch match, Player player)
+    public void NotifyJoinGame(GameMatch match, Player player)
     {
-        MatchFound?.Invoke(match, player);
+        Console.WriteLine("2\n");
+        JoinGame?.Invoke(match, player);
     }
 
     public async Task SearchGameAsync(int playerId)

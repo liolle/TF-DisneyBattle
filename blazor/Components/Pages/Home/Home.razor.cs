@@ -2,7 +2,6 @@ using blazor.models;
 using blazor.services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
 
 namespace blazor.Components.Pages.Home;
 
@@ -24,17 +23,20 @@ public partial class Home : ComponentBase
         var authState = await AuthProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (!(user.Identity?.IsAuthenticated ?? false)){return;}
+        if (!(user.Identity?.IsAuthenticated ?? false)) { return; }
 
         _ = int.TryParse(user.FindFirst("Id")?.Value, out CurrentUserId);
 
-        if (MatchService is null){return;}
+        if (MatchService is null) { return; }
 
-        MatchService.MatchFound += HandleMatchFound;
+        MatchService.JoinGame += HandleJoinGame;
     }
 
-    private void HandleMatchFound(GameMatch gameMatch, Player player){
-        Console.WriteLine($"Match found between: {gameMatch.player1} and {gameMatch.player2}");
+    private void HandleJoinGame(GameMatch gameMatch, Player player)
+    {
+        Sending = false;
+        Console.WriteLine("3\n");
+        StateHasChanged();
     }
 
     public async Task SearchGame()
@@ -43,7 +45,6 @@ public partial class Home : ComponentBase
         Sending = true;
         await Task.Delay(50);
         await MatchService.SearchGameAsync(CurrentUserId);
-        Sending = false;
     }
 
 }

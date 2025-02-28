@@ -31,6 +31,7 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
             connectionManager.Player_poll.Add(id, context);
         }
         connectionManager.Player_poll_semaphore.Release();
+        _ = Clients.Client(Context.ConnectionId).SendAsync("hello");
     }
     public async Task SearchGameAsync(int playerId, string connectionId)
     {
@@ -40,8 +41,7 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
             // Get the player state context or create it
             if (!connectionManager.Player_poll.TryGetValue(playerId, out PlayerConnectionContext? context))
             {
-                PlayerConnectionContext playerConnectionContext = new(new PlayerLobby(), new Player(playerId, connectionId), connectionManager, hubContext);
-                context = playerConnectionContext;
+                context = new(new PlayerLobby(), new Player(playerId, connectionId), connectionManager, hubContext);
                 connectionManager.Player_poll.Add(playerId, context);
             }
 
@@ -81,7 +81,6 @@ public class ConnectionManager
         finally
         {
             Searching_semaphore.Release();
-            _ = FindMatchUp();
         }
     }
 
@@ -106,7 +105,7 @@ public class ConnectionManager
 
             Searching_poll.Remove(player1);
             Searching_poll.Remove(player2);
-            _ = CreateMatch(player1, player2);
+            await CreateMatch(player1, player2);
             return;
         }
         finally
@@ -131,9 +130,9 @@ public class ConnectionManager
         }
 
         GameMatch match = new(playerId1, playerId2);
-
-        await p2Context.MatchFound(match);
-        await p1Context.MatchFound(match);
+        _=p1Context.MatchFound(match);
+        _=p2Context.MatchFound(match);
     }
+
 };
 

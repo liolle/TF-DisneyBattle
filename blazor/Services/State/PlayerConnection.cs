@@ -1,5 +1,4 @@
 using blazor.models;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR;
 
 namespace blazor.services.state;
@@ -76,6 +75,7 @@ public abstract class PlayerConnectionState
 
     public PlayerConnectionState()
     {
+        Console.WriteLine("Fist Call");
         _ = AfterInit();
     }
 
@@ -152,25 +152,28 @@ public class PlayerSearching : PlayerConnectionState
         if (joined)
         {
             Console.WriteLine($"Player {context.Player.id} Is searching for a match");
+            _=connectionManager.FindMatchUp();
         }
+
     }
 
 
     public override async Task<bool> MatchFound(GameMatch match)
     {
-        await Task.Delay(10);
+        await Task.Delay(20);
         PlayerConnectionContext? context = _context;
 
-        if (context is null ) { return false; }
-       
+        if (context is null)
+        {
+            return false;
+        }
         context.TransitionTo(new PlayerMathFound(match));
 
-        return false;
+        return true;
     }
 
     public override async Task<bool> SearchDisconnect()
     {
-        await Task.Delay(10);
         PlayerConnectionContext? context = _context;
         ConnectionManager? connectionManager = _connectionManager;
 
@@ -178,10 +181,11 @@ public class PlayerSearching : PlayerConnectionState
         Player player = context.Player;
         if (player is null) { return false; }
 
+        await Task.Delay(20);
         context.TransitionTo(new PlayerLobby());
 
 
-        return false;
+        return true;
     }
 }
 
@@ -200,36 +204,56 @@ public class PlayerMathFound : PlayerConnectionState
         PlayerConnectionContext? context = _context;
         ConnectionManager? connectionManager = _connectionManager;
         IHubContext<ConnectionHub>? clients = _clients;
-        if (context is null || connectionManager is null || clients is null) { return; }
+        if (context is null || connectionManager is null || clients is null)
+        {
+            return;
+        }
+        Console.WriteLine($"Player {context.Player.id} Found a match \n- {match}");
+        await JoinGame();
+    }
 
-        clients.Clients.Client(context.Player.connectionId)
-            .SendAsync("MatchFound", match).GetAwaiter().OnCompleted(() =>
-            {
-                Console.WriteLine($"Player {context.Player.id} Found a match \n- {match}");
-                //context.JoinGame();
-            });
+    public override async Task<bool> MatchFound(GameMatch match)
+    {
+        Console.WriteLine("Found");
+        await Task.Delay(10);
+
+        return false;
     }
 
     public override async Task<bool> JoinGame()
     {
+        await Task.Delay(20);
         PlayerConnectionContext? context = _context;
         ConnectionManager? connectionManager = _connectionManager;
         if (context is null || connectionManager is null) { return false; }
-        await connectionManager.Playing_semaphore.WaitAsync();
-        connectionManager.Playing_poll.Add(context.Player.id);
-        connectionManager.Playing_semaphore.Release();
-        context.TransitionTo(new PlayerPlaying());
+
+        context.TransitionTo(new PlayerPlaying(match));
         return true;
     }
 }
 
 public class PlayerPlaying : PlayerConnectionState
 {
+    private readonly GameMatch match;
+
+    public PlayerPlaying(GameMatch match)
+    {
+        this.match = match;
+    }
 
     public override async Task AfterInit()
     {
         await base.AfterInit();
-        Console.WriteLine($"Player {_context?.Player.id} Is Playing");
+        PlayerConnectionContext? context = _context;
+        ConnectionManager? connectionManager = _connectionManager;
+        IHubContext<ConnectionHub>? hub = _clients;
+        if (context is null || connectionManager is null || hub is null) { return; }
+
+        hub.Clients.Client(context.Player.connectionId)
+            .SendAsync("Join_game", match, context.Player).GetAwaiter().OnCompleted(() =>
+            {
+                Console.WriteLine($"Player {_context?.Player.id} Is Playing");
+            });
     }
 }
 
@@ -249,8 +273,6 @@ public class PlayerLobby : PlayerConnectionState
         if (context is null || connectionManager is null) { return false; }
         await connectionManager.JoinQueueAsync(context.Player.id);
         context.TransitionTo(new PlayerSearching());
-        _ = connectionManager.FindMatchUp();
-
         return true;
     }
 
