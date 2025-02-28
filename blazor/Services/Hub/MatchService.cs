@@ -1,6 +1,5 @@
 
 using blazor.models;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.JSInterop;
 
 namespace blazor.services;
@@ -16,16 +15,9 @@ public class MatchService : IDisposable
     {
         _jsRuntime = jSRuntime;
         _dotNetObjectReference = DotNetObjectReference.Create(this);
+        _jsRuntime.InvokeVoidAsync("initializeMatchService", _dotNetObjectReference);
     }
 
-    public async Task InitializeAsync()
-    {
-        // Create a .NET object reference
-        _dotNetObjectReference = DotNetObjectReference.Create(this);
-
-        // Pass the reference to JavaScript
-        await _jsRuntime.InvokeVoidAsync("initializeMatchService", _dotNetObjectReference);
-    }
 
     [JSInvokable]
     public void NotifyJoinGame(GameMatch match, Player player)

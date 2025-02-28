@@ -85,26 +85,23 @@ window.initializeMatchService = (dotNetReference) => {
 };
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/match_hub")
+    .withUrl("https://localhost:7145/match_hub")
     .build();
 
-connection.start().then(() => { });
-
-connection.on("MatchFound", (match, player) => {
-    console.log(match, player)
+connection.on("Join_game", (match, player) => {
     // Call the .NET method to trigger the event
-    /*
     if (matchServiceReference) {
-        matchServiceReference.invokeMethodAsync("NotifyMatchFound", match, player);
+        matchServiceReference.invokeMethodAsync("NotifyJoinGame", match, player);
     }
-        */
 });
+
+connection.start().catch(err => console.error(err.toString()));
+
 
 window.getConnectionId = () => {
     return connection.connection.connectionId;
 };
 
 window.searchGame = async (playerId) => {
-    console.log(playerId,connection.connection.connectionId)
     connection.invoke("SearchGameAsync", playerId,connection.connection.connectionId)
 }
