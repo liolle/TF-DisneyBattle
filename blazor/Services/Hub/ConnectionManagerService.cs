@@ -53,20 +53,15 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
         }
     }
 
-    public async Task NotifyMatchFound(GameMatch match, string connectionId)
-    {
-        await Clients.Client(connectionId).SendAsync("MatchFound", match);
-    }
+
 }
 
 public class ConnectionManager
 {
     public OwnedSemaphore Searching_semaphore { get; } = new(1, 1);
-    public OwnedSemaphore Playing_semaphore { get; } = new(1, 1);
     public OwnedSemaphore Player_poll_semaphore { get; } = new(1, 1);
     public OwnedSemaphore Match_semaphore { get; } = new(1, 1);
     public HashSet<int> Searching_poll { get; } = [];
-    public HashSet<int> Playing_poll { get; } = [];
     public Dictionary<int, PlayerConnectionContext> Player_poll { get; } = [];
     public Dictionary<int, GameMatch> Match_poll { get; } = [];
 
@@ -123,8 +118,8 @@ public class ConnectionManager
         if (p1Context is null || p2Context is null)
         {
             // Add back into the searching_poll
-            p2Context?.SearchDisconnect();
-            p1Context?.SearchDisconnect();
+            p2Context?.Disconnect();
+            p1Context?.Disconnect();
 
             return;
         }
