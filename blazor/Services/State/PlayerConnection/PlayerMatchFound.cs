@@ -26,14 +26,6 @@ public class PlayerMathFound : PlayerConnectionState
         await JoinGame();
     }
 
-    public override async Task<bool> MatchFound(GameMatch match)
-    {
-        Console.WriteLine("Found");
-        await Task.Delay(10);
-
-        return false;
-    }
-
     public override async Task<bool> JoinGame()
     {
         await Task.Delay(50);

@@ -6,7 +6,6 @@ namespace blazor.services;
 
 public class MatchService : IDisposable
 {
-    public event Action<GameMatch, Player>? MatchFound;
     public event Action<GameMatch, Player>? JoinGame;
     private readonly IJSRuntime _jsRuntime;
     private DotNetObjectReference<MatchService>? _dotNetObjectReference;

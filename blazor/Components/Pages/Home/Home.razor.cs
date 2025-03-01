@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace blazor.Components.Pages.Home;
 
-public partial class Home : ComponentBase
+public partial class Home : ComponentBase, IDisposable
 {
     bool Sending = false;
 
@@ -44,6 +44,12 @@ public partial class Home : ComponentBase
         Sending = true;
         await Task.Delay(50);
         await MatchService.SearchGameAsync(CurrentUserId);
+    }
+
+    public void Dispose()
+    {
+        if (MatchService is null) { return; }
+        MatchService.JoinGame -= HandleJoinGame;
     }
 
 }

@@ -59,7 +59,6 @@ public abstract class PlayerConnectionState
 
     public PlayerConnectionState()
     {
-        Console.WriteLine("Fist Call");
         _ = AfterInit();
     }
 
