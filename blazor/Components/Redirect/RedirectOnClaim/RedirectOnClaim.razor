@@ -1,0 +1,21 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager navigation
+
+@rendermode InteractiveServer
+
+<AuthorizeView>
+    <Authorized>
+
+        @if (IsValid)
+        {
+            if (RedirectOnValid is not null){
+                navigation.NavigateTo(RedirectOnValid);
+            }
+        }else {
+            if (RedirectOnFailure is not null){
+                navigation.NavigateTo(RedirectOnFailure);
+            }
+        }
+    </Authorized>
+</AuthorizeView>

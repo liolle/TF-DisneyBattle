@@ -17,6 +17,10 @@ public partial class Home : ComponentBase, IDisposable
     [Inject]
     private AuthenticationStateProvider? AuthProvider { get; set; }
 
+    [Inject]
+    private NavigationManager? navigation {get;set;}
+
+
     protected override async Task OnInitializedAsync()
     {
         if (AuthProvider is null) { return; }
@@ -34,15 +38,13 @@ public partial class Home : ComponentBase, IDisposable
 
     private void HandleJoinGame(GameMatch gameMatch, Player player)
     {
-        Sending = false;
-        StateHasChanged();
+        navigation?.NavigateTo("/game");
     }
 
     public async Task SearchGame()
     {
         if (MatchService is null || CurrentUserId == 0 || Sending) { return; }
         Sending = true;
-        await Task.Delay(50);
         await MatchService.SearchGameAsync(CurrentUserId);
     }
 

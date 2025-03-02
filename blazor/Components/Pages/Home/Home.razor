@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components.Authorization
+@using blazor.Components.Redirect.RedirectOnClaim
+@using blazor.Components.Redirect.RedirectToGame
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 
@@ -8,16 +10,18 @@
 <div class="home-container">
     <Navbar />
     <div class="main">
-
+        <RedirectOnClaim ClaimName="PlayerState" ClaimValue="PlayerPlaying" RedirectOnValid="/game"/>
+        <AutoRedirectToGame/>
         <AuthorizeView>
             <Authorized>
-                @if (!@Sending)
+                @if (!Sending)
                 {
-                    <button @onclick="SearchGame">Join Game</button>
 
+                    <button @onclick="SearchGame">Join Game</button>
                 }
                 else
                 {
+
                     <div>Loading...</div>
                 }
             </Authorized>

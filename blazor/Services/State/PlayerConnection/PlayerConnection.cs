@@ -10,6 +10,9 @@ public class PlayerConnectionContext
     private IHubContext<ConnectionHub> _hub;
 
     public Player Player { get; set; }
+    public Type Type {get{
+        return _state.GetType();
+    }}
 
     public void  UpdateHub(IHubContext<ConnectionHub> hub){
         _hub = hub;

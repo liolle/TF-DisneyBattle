@@ -1,16 +1,18 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using blazor.models;
+using blazor.services.state;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace blazor.services;
 
-public class AuthProvider(IHttpContextAccessor httpContextAccessor) : AuthenticationStateProvider
+public class AuthProvider(IHttpContextAccessor httpContextAccessor, ConnectionManager connectionManager) : AuthenticationStateProvider
 {
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         await Task.Delay(20);
         HttpContext? httpContext = httpContextAccessor.HttpContext;
+
 
 
         if (httpContext is null)
@@ -37,12 +39,18 @@ public class AuthProvider(IHttpContextAccessor httpContextAccessor) : Authentica
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
 
+        connectionManager.Player_poll.TryGetValue(int.Parse(id), out PlayerConnectionContext? context);
+
+
+        Console.WriteLine($"{context?.Type.Name ?? ""}");
         List<Claim> claims =
         [
             new (nameof(User.Id), id),
             new (nameof(User.Email), email),
-            new ("Provider", provider)
+            new ("Provider", provider),
+            new ("PlayerState", context?.Type.Name ?? "")
         ];
+
         ClaimsIdentity identity = new(claims, "cookieAuth");
 
         return new AuthenticationState(new ClaimsPrincipal(identity));

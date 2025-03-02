@@ -1,0 +1,15 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager navigation
+
+@rendermode InteractiveServer
+
+<AuthorizeView>
+    <Authorized>
+
+        @if (context?.User?.Identity?.IsAuthenticated ?? false)
+        {
+            navigation.NavigateTo("/");
+        }
+    </Authorized>
+</AuthorizeView>

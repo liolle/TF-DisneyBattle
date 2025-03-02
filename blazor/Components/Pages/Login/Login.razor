@@ -1,5 +1,9 @@
 @page "/login"
+@using blazor.Components.Redirect.RedirectOnClaim
 @using blazor.models
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager navigation
 
 <PageTitle>Login</PageTitle>
 
@@ -8,6 +12,8 @@
         <Navbar />
     </div>
     <div class="main">
+
+        <RedirectOnClaim ClaimName="Id" RedirectOnValid="/" />
         <div class="form-main">
             <div class="link-container">
                 <div @onclick="GoToRegisterPage" class="link">

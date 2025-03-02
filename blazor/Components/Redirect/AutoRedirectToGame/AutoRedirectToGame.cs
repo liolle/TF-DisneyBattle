@@ -3,7 +3,7 @@ using blazor.services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
-public partial class RedirectToGame : ComponentBase
+public partial class AutoRedirectToGame : ComponentBase
 {
     [Inject]
     private MatchService? MatchService { get; set; }
@@ -16,13 +16,8 @@ public partial class RedirectToGame : ComponentBase
 
     protected override void OnInitialized()
     {
-        Console.WriteLine($"{MatchService?.CurrentState}");
         if (MatchService is null || AuthProvider is null) { return; }
         MatchService.OnStateChanged += NavigateToGame;
-        if (MatchService?.CurrentState == "Playing")
-        {
-            Navigation?.NavigateTo("/game");
-        }
     }
 
     private async Task NavigateToGame()
@@ -31,9 +26,9 @@ public partial class RedirectToGame : ComponentBase
         var authState = await AuthProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         if (!(user.Identity?.IsAuthenticated ?? false)) { return; }
-        if (MatchService?.CurrentState == "Playing")
-        {
 
+        if (user.HasClaim(val=>val.Type =="PlayerState" && val.Value == "PlayerPlaying"))
+        {
             Navigation?.NavigateTo("/game");
         }
     }
