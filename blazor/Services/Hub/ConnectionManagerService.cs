@@ -203,8 +203,8 @@ public class ConnectionManager
         Player_poll.TryGetValue(match.player1, out PlayerConnectionContext? context_p1);
         Player_poll.TryGetValue(match.player2, out PlayerConnectionContext? context_p2);
 
-        _=context_p1?.QuitGame();
-        _=context_p2?.QuitGame();
+        context_p1?.QuitGame();
+        context_p2?.QuitGame();
 
         Player_poll_semaphore.Release();
 
