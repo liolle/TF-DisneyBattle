@@ -48,7 +48,6 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
         try
         {
             await connectionManager.Player_poll_semaphore.WaitAsync();
-            // Get the player state context or create it
             if (!connectionManager.Player_poll.TryGetValue(playerId, out PlayerConnectionContext? context))
             {
                 context = new(new PlayerLobby(), new Player(playerId, connectionId), connectionManager, hubContext);
@@ -61,6 +60,34 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
         {
             connectionManager.Player_poll_semaphore.Release();
         }
+    }
+
+    public async Task LeaveGameAsync (int playerId){
+        try
+        {
+            await connectionManager.Player_poll_semaphore.WaitAsync();
+            if (!connectionManager.Player_poll.TryGetValue(playerId, out PlayerConnectionContext? context))
+            if (context is null){return;}
+
+            _ = context.Quit();
+        }
+        finally
+        {
+            connectionManager.Player_poll_semaphore.Release();
+        }
+    }
+
+
+    public async Task<GameMatch?> GetGameState(){
+        var authState = await authProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        string? id_str = user.Claims.FirstOrDefault(val => val.Type == "Id")?.Value;
+        if (id_str is null || !int.TryParse(id_str, out int id)) { return null; }
+
+        connectionManager.Match_poll.TryGetValue(id,out GameMatch? match);
+
+        return match;
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -83,7 +110,6 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
         await context.Disconnect();
         await base.OnDisconnectedAsync(exception);
     }
-
 
 }
 
@@ -156,8 +182,32 @@ public class ConnectionManager
         }
 
         GameMatch match = new(playerId1, playerId2);
+        await Match_semaphore.WaitAsync();
+
+        Match_poll.Add(playerId1, match);
+        Match_poll.Add(playerId2, match);
+
+        Match_semaphore.Release();
         _ = p1Context.MatchFound(match);
         _ = p2Context.MatchFound(match);
+    }
+
+    public async Task EndGame(GameMatch match){
+        await Match_semaphore.WaitAsync();
+        Match_poll.Remove(match.player1);
+        Match_poll.Remove(match.player2);
+        Match_semaphore.Release();
+
+        await Player_poll_semaphore.WaitAsync();
+
+        Player_poll.TryGetValue(match.player1, out PlayerConnectionContext? context_p1);
+        Player_poll.TryGetValue(match.player2, out PlayerConnectionContext? context_p2);
+
+        _=context_p1?.QuitGame();
+        _=context_p2?.QuitGame();
+
+        Player_poll_semaphore.Release();
+
     }
 
 };

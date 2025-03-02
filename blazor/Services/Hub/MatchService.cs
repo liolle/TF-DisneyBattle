@@ -6,9 +6,10 @@ namespace blazor.services;
 
 public class MatchService : IDisposable
 {
-    public string CurrentState { get; private set; } = "";
     public event Action<GameMatch, Player>? JoinGame;
     public event Func<Task>? OnStateChanged;
+    public event Action? OnGameLeft;
+    public event Action<GameMatch>? OnGameChange;
     private readonly IJSRuntime _jsRuntime;
     private DotNetObjectReference<MatchService>? _dotNetObjectReference;
 
@@ -23,21 +24,32 @@ public class MatchService : IDisposable
     [JSInvokable]
     public void NotifyJoinGame(GameMatch match, Player player)
     {
-        CurrentState = "Playing";
         JoinGame?.Invoke(match, player);
         OnStateChanged?.Invoke();
     }
 
     [JSInvokable]
+    public void GameHasChanged(GameMatch match){
+        OnGameChange?.Invoke(match);
+    }
+
+    [JSInvokable]
     public void NotifyLeftGame()
     {
-        CurrentState = "";
-        OnStateChanged?.Invoke();
+        OnGameLeft?.Invoke();
     }
 
     public async Task SearchGameAsync(int playerId)
     {
         await _jsRuntime.InvokeVoidAsync("searchGame", playerId);
+    }
+
+    public async Task LeaveGameAsync(int playerId){
+        await _jsRuntime.InvokeVoidAsync("leaveGame",playerId);
+    }
+
+    public async Task<GameMatch?> GetGameStateAsync(){
+        return await _jsRuntime.InvokeAsync<GameMatch?>("getGameState");
     }
 
     public void Dispose()

@@ -42,7 +42,6 @@ public class AuthProvider(IHttpContextAccessor httpContextAccessor, ConnectionMa
         connectionManager.Player_poll.TryGetValue(int.Parse(id), out PlayerConnectionContext? context);
 
 
-        Console.WriteLine($"{context?.Type.Name ?? ""}");
         List<Claim> claims =
         [
             new (nameof(User.Id), id),

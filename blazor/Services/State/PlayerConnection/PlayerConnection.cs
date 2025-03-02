@@ -51,9 +51,22 @@ public class PlayerConnectionContext
         return _state.Disconnect();
     }
 
+    public Task<bool> Quit()
+    {
+        return _state.Quit();
+    }
     public Task<bool> JoinGame()
     {
         return _state.JoinGame();
+    }
+
+    public async Task QuitGame()
+    {
+
+        TransitionTo(new PlayerLobby());
+        await Task.Delay(100);
+        await _hub.Clients.Client(Player.connectionId).SendAsync("leave_game");
+        Console.WriteLine($"Player {Player} left the game");
     }
 
 }
@@ -103,6 +116,11 @@ public abstract class PlayerConnectionState
 
 
     public virtual async Task<bool> SearchGame()
+    {
+        await Task.Delay(10);
+        return false;
+    }
+    public virtual async Task<bool> Quit()
     {
         await Task.Delay(10);
         return false;

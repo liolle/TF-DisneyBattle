@@ -17,3 +17,77 @@
     justify-content: center;
     align-items: center;
 }
+
+.board {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+}
+
+.board-separator {
+    background-color: aqua;
+    flex: 1;
+    width: 100%;
+}
+
+.board-part{
+    position: relative;
+    flex: 80;
+    width: 100%;
+}
+
+.player-tag {
+    position: absolute;
+    padding: .5rem 1rem;
+    border: 1px solid azure;
+    border-radius: .5rem;
+    width: 64px;
+    display: flex;
+    justify-content: center;
+    user-select: none;
+}
+
+.top .player-tag {
+    top: 1rem;
+    right: 1rem;
+}
+
+.bottom .player-tag {
+    bottom: 1rem;
+    left: 1rem;
+}
+.btn-quit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    width: 44px;
+    position: absolute;
+    z-index: 10;
+    top: 1rem;
+    left: 1rem;
+}
+
+.btn-quit:hover {
+    background-color: red;
+}
+
+button,
+.btn {
+    font-family: monospace;
+    font-size: medium;
+    font-weight: lighter;
+    font-style: italic;
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    background: azure;
+    color: #262626;
+}
+
+.btn-container {
+    display: flex;
+    gap: 1rem;
+}

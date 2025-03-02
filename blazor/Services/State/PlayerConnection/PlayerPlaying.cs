@@ -35,4 +35,16 @@ public class PlayerPlaying : PlayerConnectionState
         context.TransitionTo(new PlayerTempDisconnection(match));
         return true;
     }
+
+
+    public override async Task<bool> Quit(){
+        await base.AfterInit();
+        ConnectionManager? connectionManager = _connectionManager;
+        if ( connectionManager is null ) { return false; }
+
+        await connectionManager.EndGame(match);
+
+        return true;
+    }
+
 }

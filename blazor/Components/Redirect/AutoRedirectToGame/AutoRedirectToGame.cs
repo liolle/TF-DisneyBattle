@@ -18,6 +18,7 @@ public partial class AutoRedirectToGame : ComponentBase
     {
         if (MatchService is null || AuthProvider is null) { return; }
         MatchService.OnStateChanged += NavigateToGame;
+        MatchService.OnGameLeft += NavigateHome;
     }
 
     private async Task NavigateToGame()
@@ -31,6 +32,11 @@ public partial class AutoRedirectToGame : ComponentBase
         {
             Navigation?.NavigateTo("/game");
         }
+    }
+
+    private void NavigateHome()
+    {
+        Navigation?.NavigateTo("/");
     }
 
     public void Dispose()

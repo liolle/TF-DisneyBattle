@@ -95,7 +95,15 @@ connection.on("Join_game", (match, player) => {
     }
 });
 
-connection.on("left_game", () => {
+connection
+
+connection.on("game_has_changed", () => {
+    if (matchServiceReference) {
+        matchServiceReference.invokeMethodAsync("GameHasChanged");
+    }
+});
+
+connection.on("leave_game", () => {
     if (matchServiceReference) {
         matchServiceReference.invokeMethodAsync("NotifyLeftGame");
     }
@@ -110,4 +118,13 @@ window.getConnectionId = () => {
 
 window.searchGame = async (playerId) => {
     connection.invoke("SearchGameAsync", playerId,connection.connection.connectionId)
+}
+
+window.leaveGame = async (playerId)=>{
+    connection.invoke("LeaveGameAsync",playerId)
+}
+
+window.getGameState = async ()=>{
+    let response = await connection.invoke("GetGameState")
+    return response 
 }
