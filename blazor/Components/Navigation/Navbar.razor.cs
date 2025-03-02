@@ -2,7 +2,6 @@ namespace blazor.Components.Navigation;
 
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using blazor.models;
 using blazor.services;
 using Microsoft.AspNetCore.Components;
 

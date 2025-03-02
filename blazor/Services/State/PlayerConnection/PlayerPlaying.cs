@@ -23,7 +23,7 @@ public class PlayerPlaying : PlayerConnectionState
         hub.Clients.Client(context.Player.connectionId)
             .SendAsync("Join_game", match, context.Player).GetAwaiter().OnCompleted(() =>
             {
-                Console.WriteLine($"Player {_context?.Player.id} Is Playing");
+                Console.WriteLine($"Player {_context?.Player} Is Playing");
             });
     }
 

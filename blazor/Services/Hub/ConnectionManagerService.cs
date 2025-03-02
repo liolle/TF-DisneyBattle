@@ -22,24 +22,27 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
 
         string? id_str = user.Claims.FirstOrDefault(val => val.Type == "Id")?.Value;
         if (id_str is null || !int.TryParse(id_str, out int id)) { return; }
+        Player p = new(id, Context.ConnectionId);
 
         await connectionManager.Player_poll_semaphore.WaitAsync();
         if (!connectionManager.Player_poll.TryGetValue(id, out PlayerConnectionContext? context))
         {
-            Player p = new(id, Context.ConnectionId);
             context = new(new PlayerLobby(), p, connectionManager, hubContext);
             connectionManager.Player_poll.Add(id, context);
         }
+        else
+        {
+            context.Player = p;
+        }
         connectionManager.Player_poll_semaphore.Release();
 
-        Console.WriteLine();
 
         if (!context.IsSameType(typeof(PlayerLobby)))
         {
             await context.SearchGame();
         }
-        _ = Clients.Client(Context.ConnectionId).SendAsync("hello");
     }
+    
     public async Task SearchGameAsync(int playerId, string connectionId)
     {
         try
@@ -68,14 +71,15 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
         string? id_str = user.Claims.FirstOrDefault(val => val.Type == "Id")?.Value;
         if (id_str is null || !int.TryParse(id_str, out int id)) { return; }
 
+        Player p = new(id, Context.ConnectionId);
         await connectionManager.Player_poll_semaphore.WaitAsync();
         if (!connectionManager.Player_poll.TryGetValue(id, out PlayerConnectionContext? context))
         {
-            Player p = new(id, Context.ConnectionId);
             context = new(new PlayerLobby(), p, connectionManager, hubContext);
             connectionManager.Player_poll.Add(id, context);
         }
         connectionManager.Player_poll_semaphore.Release();
+
         await context.Disconnect();
         await base.OnDisconnectedAsync(exception);
     }

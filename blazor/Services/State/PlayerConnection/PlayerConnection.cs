@@ -7,15 +7,19 @@ public class PlayerConnectionContext
 {
     private PlayerConnectionState _state = new EmptyState();
     private ConnectionManager _connectionManager;
-    private IHubContext<ConnectionHub> _clients;
+    private IHubContext<ConnectionHub> _hub;
 
     public Player Player { get; set; }
+
+    public void  UpdateHub(IHubContext<ConnectionHub> hub){
+        _hub = hub;
+    }
 
     public PlayerConnectionContext(PlayerConnectionState state, Player player, ConnectionManager connectionManager, IHubContext<ConnectionHub> clients)
     {
         _connectionManager = connectionManager;
         Player = player;
-        _clients = clients;
+        _hub = clients;
         TransitionTo(state);
     }
 
@@ -26,7 +30,7 @@ public class PlayerConnectionContext
     public void TransitionTo(PlayerConnectionState state)
     {
         _state = state;
-        _state.SetContext(this, _connectionManager, _clients);
+        _state.SetContext(this, _connectionManager, _hub);
     }
 
     public Task<bool> SearchGame()

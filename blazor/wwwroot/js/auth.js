@@ -95,6 +95,12 @@ connection.on("Join_game", (match, player) => {
     }
 });
 
+connection.on("left_game", () => {
+    if (matchServiceReference) {
+        matchServiceReference.invokeMethodAsync("NotifyLeftGame");
+    }
+});
+
 connection.start().catch(err => console.error(err.toString()));
 
 

@@ -1,8 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using blazor.services
+@using blazor.Components.Redirect.RedirectToGame
 @inject AuthenticationStateProvider AuthStateProvider
 
 @inherits LayoutComponentBase
+
+<RedirectToGame/>
 
 <div class="main-layout">
     @Body
