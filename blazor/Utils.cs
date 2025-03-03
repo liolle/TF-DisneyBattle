@@ -1,6 +1,8 @@
+using System.Security.Claims;
+
 namespace blazor.utils;
 
-public class Utils
+public static class Utils
 {
     public static async Task<T?> ExBackoff<T>(Func<T?> operation, int maxRetries = 5, int initialDelay = 1)
     {
@@ -18,6 +20,13 @@ public class Utils
         }
         return default;
     }
+
+    public static int? ExtractIntFromClaim(IEnumerable<Claim> claims,string type){
+        string? id_str = claims.FirstOrDefault(val => val.Type == type)?.Value;
+        if (id_str is null || !int.TryParse(id_str, out int id)) { return null; }
+        return id;
+    }
+
 }
 
 public class OwnedSemaphore
