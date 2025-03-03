@@ -6,15 +6,20 @@ namespace blazor.services.state;
 public class PlayerConnectionContext
 {
     private PlayerConnectionState _state = new EmptyState();
-    private ConnectionManager _connectionManager;
+    private readonly ConnectionManager _connectionManager;
     private IHubContext<ConnectionHub> _hub;
 
     public Player Player { get; set; }
-    public Type Type {get{
-        return _state.GetType();
-    }}
+    public Type Type
+    {
+        get
+        {
+            return _state.GetType();
+        }
+    }
 
-    public void  UpdateHub(IHubContext<ConnectionHub> hub){
+    public void UpdateHub(IHubContext<ConnectionHub> hub)
+    {
         _hub = hub;
     }
 
@@ -26,7 +31,8 @@ public class PlayerConnectionContext
         TransitionTo(state);
     }
 
-    public bool IsSameType(Type type){
+    public bool IsSameType(Type type)
+    {
         return _state.GetType() == type;
     }
 
@@ -113,7 +119,6 @@ public abstract class PlayerConnectionState
         await Task.Delay(10);
         return false;
     }
-
 
     public virtual async Task<bool> SearchGame()
     {

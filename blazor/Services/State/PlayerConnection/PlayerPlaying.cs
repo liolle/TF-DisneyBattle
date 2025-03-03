@@ -3,14 +3,9 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace blazor.services.state;
 
-public class PlayerPlaying : PlayerConnectionState
+public class PlayerPlaying(GameMatch match) : PlayerConnectionState
 {
-    private readonly GameMatch match;
-
-    public PlayerPlaying(GameMatch match)
-    {
-        this.match = match;
-    }
+    private readonly GameMatch match = match;
 
     public override async Task AfterInit()
     {
@@ -21,10 +16,10 @@ public class PlayerPlaying : PlayerConnectionState
         if (context is null || connectionManager is null || hub is null) { return; }
 
         hub.Clients.Client(context.Player.connectionId)
-            .SendAsync("Join_game", match, context.Player).GetAwaiter().OnCompleted(() =>
-            {
-                Console.WriteLine($"Player {_context?.Player} Is Playing");
-            });
+        .SendAsync("Join_game", match, context.Player).GetAwaiter().OnCompleted(() =>
+        {
+            Console.WriteLine($"Player {_context?.Player} Is Playing");
+        });
     }
 
     public override async Task<bool> Disconnect()
@@ -38,12 +33,10 @@ public class PlayerPlaying : PlayerConnectionState
 
 
     public override async Task<bool> Quit(){
-        await base.AfterInit();
+        await Task.Delay(50);
         ConnectionManager? connectionManager = _connectionManager;
         if ( connectionManager is null ) { return false; }
-
         await connectionManager.EndGame(match);
-
         return true;
     }
 
