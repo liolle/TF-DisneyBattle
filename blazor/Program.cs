@@ -2,9 +2,12 @@ using blazor.Components;
 using blazor.services;
 using DotNetEnv;
 using Microsoft.AspNetCore.Components.Authorization;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
+builder.Services.AddControllers();
 
 // Add Env &  Json configuration
 Env.Load();
@@ -38,15 +41,17 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
+
+app.UseRouting();
+app.UseHttpMetrics();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.MapHub<ConnectionHub>("/match_hub");
-
+app.MapMetrics(); 
 app.UseStatusCodePagesWithRedirects("/404");
 
 app.Run();

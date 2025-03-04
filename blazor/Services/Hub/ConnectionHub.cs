@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using blazor.models;
-using blazor.services;
 using blazor.services.state;
 using blazor.utils;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,7 +14,6 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
     {
         return (await authProvider.GetAuthenticationStateAsync()).User.Claims;
     }
-
 
     public override async Task OnConnectedAsync()
     {
@@ -77,15 +75,15 @@ public class ConnectionHub(ConnectionManager connectionManager, AuthenticationSt
     {
         IEnumerable<Claim> claims = await GetClaims();
 
-        string? id_str = claims.FirstOrDefault(val => val.Type == "Id")?.Value;
-        if (id_str is null || !int.TryParse(id_str, out int id)) { return; }
+        int? id = Utils.ExtractIntFromClaim(claims, "Id");
+        if (id is null) { return; }
 
-        Player p = new(id, Context.ConnectionId);
+        Player p = new(id.Value, Context.ConnectionId);
         await connectionManager.Player_poll_semaphore.WaitAsync();
-        if (!connectionManager.Player_poll.TryGetValue(id, out PlayerConnectionContext? context))
+        if (!connectionManager.Player_poll.TryGetValue(id.Value, out PlayerConnectionContext? context))
         {
             context = new(new PlayerLobby(), p, connectionManager, hubContext);
-            connectionManager.Player_poll.Add(id, context);
+            connectionManager.Player_poll.Add(id.Value, context);
         }
         connectionManager.Player_poll_semaphore.Release();
 

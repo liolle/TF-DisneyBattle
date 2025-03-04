@@ -13,8 +13,6 @@ public class AuthProvider(IHttpContextAccessor httpContextAccessor, ConnectionMa
         await Task.Delay(20);
         HttpContext? httpContext = httpContextAccessor.HttpContext;
 
-
-
         if (httpContext is null)
         {
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
