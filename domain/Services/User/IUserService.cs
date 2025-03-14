@@ -8,11 +8,11 @@ namespace disney_battle.domain.services;
 
 
 public interface IUserService :
-    ICommandHandler<RegistersUserCommand>,
-    IQueryHandler<UserFromUserNameQuery,CredentialInfoModel?>,
-    IQueryHandler<CredentialLoginQuery,string>,
-    IQueryHandlerAsync<OauthMicrosoftQuery,string>,
-    IQueryHandler<AccountFromProviderQuery,AccountEntity>
+ICommandHandler<RegistersUserCommand>,
+  IQueryHandler<UserFromUserNameQuery,CredentialInfoModel?>,
+  IQueryHandler<CredentialLoginQuery,string>,
+  IQueryHandlerAsync<OauthMicrosoftQuery,string>,
+  IQueryHandler<AccountFromProviderQuery,AccountEntity>
 {
-    
+
 }

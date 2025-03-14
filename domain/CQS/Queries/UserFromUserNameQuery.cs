@@ -6,5 +6,5 @@ namespace disney_battle.domain.cqs.queries;
 
 public class UserFromUserNameQuery(string userName) : IQueryDefinition<CredentialInfoModel?>
 {
-    public string UserName {get;} = userName;
+  public string UserName {get;} = userName;
 }

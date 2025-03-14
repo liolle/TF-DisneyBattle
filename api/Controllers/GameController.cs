@@ -9,17 +9,17 @@ namespace disney_battle.api.controller;
 
 public class GameController(IGameService gameService) : ControllerBase
 {
-    [HttpGet]
-    [Route("/personage/all")]
-    [EnableCors("auth-input")]
-    [Authorize]
-    public IActionResult AllPersonage()
+  [HttpGet]
+  [Route("/personage/all")]
+  [EnableCors("auth-input")]
+  [Authorize]
+  public IActionResult AllPersonage()
+  {
+    IQueryResult<ICollection<PersonageEntity>> result = gameService.Execute(new AllPersonages());
+    if (result.IsFailure)
     {
-        IQueryResult<ICollection<PersonageEntity>> result = gameService.Execute(new AllPersonages());
-        if (result.IsFailure)
-        {
-            return BadRequest(result);
-        }
-        return Ok(result);
+      return BadRequest(result);
     }
+    return Ok(result);
+  }
 }

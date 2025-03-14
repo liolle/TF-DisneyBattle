@@ -17,36 +17,36 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 //JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options=>{
-        string? jwt_key = configuration["JWT_KEY"] ?? throw new Exception("Missing JWT_KEY configuration");
+  .AddJwtBearer(options=>{
+      string? jwt_key = configuration["JWT_KEY"] ?? throw new Exception("Missing JWT_KEY configuration");
 
-        options.TokenValidationParameters = new TokenValidationParameters
+      options.TokenValidationParameters = new TokenValidationParameters
+      {
+      ValidateIssuer = true,
+      ValidateAudience = true,
+      ValidateLifetime = true,
+      ValidateIssuerSigningKey = true,
+      ValidIssuer = configuration["JWT_ISSUER"],
+      ValidAudience = configuration["JWT_AUDIENCE"],
+      IssuerSigningKey = new SymmetricSecurityKey(
+          Encoding.UTF8.GetBytes(jwt_key))
+      };
+
+
+      // extract token from cookies and place it into the Bearer.
+      options.Events = new JwtBearerEvents
+      {
+      OnMessageReceived = context =>
+      {
+        string? jwt_name = configuration["AUTH_TOKEN_NAME"] ?? throw new Exception("Missing AUTH_TOKEN_NAME configuration");
+        if (context.Request.Cookies.ContainsKey(jwt_name))
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = configuration["JWT_ISSUER"],
-            ValidAudience = configuration["JWT_AUDIENCE"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwt_key))
-        };
-
-
-        // extract token from cookies and place it into the Bearer.
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                string? jwt_name = configuration["AUTH_TOKEN_NAME"] ?? throw new Exception("Missing AUTH_TOKEN_NAME configuration");
-                if (context.Request.Cookies.ContainsKey(jwt_name))
-                {
-                    context.Token = context.Request.Cookies[jwt_name];
-                }
-                return Task.CompletedTask;
-            }
-        };
-    });
+          context.Token = context.Request.Cookies[jwt_name];
+        }
+        return Task.CompletedTask;
+      }
+      };
+  });
 
 // Cors
 builder.Services.AddCors(options=>{
@@ -56,8 +56,8 @@ builder.Services.AddCors(options=>{
         .AllowCredentials()
         .AllowAnyHeader()
         .AllowAnyMethod();
+        });
     });
-});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -78,8 +78,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 

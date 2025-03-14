@@ -5,43 +5,43 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 public partial class AutoRedirectToGame : ComponentBase
 {
-    [Inject]
-    private MatchService? MatchService { get; set; }
+  [Inject]
+  private MatchService? MatchService { get; set; }
 
-    [Inject]
-    private AuthenticationStateProvider? AuthProvider { get; set; }
+  [Inject]
+  private AuthenticationStateProvider? AuthProvider { get; set; }
 
-    [Inject]
-    NavigationManager? Navigation { get; set; }
+  [Inject]
+  NavigationManager? Navigation { get; set; }
 
-    protected override void OnInitialized()
+  protected override void OnInitialized()
+  {
+    if (MatchService is null || AuthProvider is null) { return; }
+    MatchService.OnStateChanged += NavigateToGame;
+    MatchService.OnGameLeft += NavigateHome;
+  }
+
+  private async Task NavigateToGame()
+  {
+    if (AuthProvider is null) { return; }
+    var authState = await AuthProvider.GetAuthenticationStateAsync();
+    var user = authState.User;
+    if (!(user.Identity?.IsAuthenticated ?? false)) { return; }
+
+    if (user.HasClaim(val=>val.Type =="PlayerState" && val.Value == "PlayerPlaying"))
     {
-        if (MatchService is null || AuthProvider is null) { return; }
-        MatchService.OnStateChanged += NavigateToGame;
-        MatchService.OnGameLeft += NavigateHome;
+      Navigation?.NavigateTo("/game");
     }
+  }
 
-    private async Task NavigateToGame()
-    {
-        if (AuthProvider is null) { return; }
-        var authState = await AuthProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        if (!(user.Identity?.IsAuthenticated ?? false)) { return; }
+  private void NavigateHome()
+  {
+    Navigation?.NavigateTo("/");
+  }
 
-        if (user.HasClaim(val=>val.Type =="PlayerState" && val.Value == "PlayerPlaying"))
-        {
-            Navigation?.NavigateTo("/game");
-        }
-    }
-
-    private void NavigateHome()
-    {
-        Navigation?.NavigateTo("/");
-    }
-
-    public void Dispose()
-    {
-        if (MatchService is null) { return; }
-        MatchService.OnStateChanged -= NavigateToGame;
-    }
+  public void Dispose()
+  {
+    if (MatchService is null) { return; }
+    MatchService.OnStateChanged -= NavigateToGame;
+  }
 }

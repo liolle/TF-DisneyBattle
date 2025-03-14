@@ -7,25 +7,25 @@ namespace blazor.Components.Pages.Register;
 
 public partial class Register : ComponentBase
 {
-    public string Home {get;} = "/";
-    public RegisterModel Model { get; set; } = new();
+  public string Home {get;} = "/";
+  public RegisterModel Model { get; set; } = new();
 
-    [Inject]
-    public IAuthService? Service { get; set; }
-    [Inject]
-    private NavigationManager? Navigation { get; set; }
+  [Inject]
+  public IAuthService? Service { get; set; }
+  [Inject]
+  private NavigationManager? Navigation { get; set; }
 
-    private async Task SubmitValidFrom()
-    {
-        if (Service is null){return;}
-        bool result = await Service.Register(Model);
-        if (!result) { return; }
-        await Task.Delay(50);
-        Navigation?.NavigateTo("/login");
-    }
+  private async Task SubmitValidFrom()
+  {
+    if (Service is null){return;}
+    bool result = await Service.Register(Model);
+    if (!result) { return; }
+    await Task.Delay(50);
+    Navigation?.NavigateTo("/login");
+  }
 
 
-    public void GoToLoginPage(){
-        Navigation?.NavigateTo("/login",false,true);
-    }
+  public void GoToLoginPage(){
+    Navigation?.NavigateTo("/login",false,true);
+  }
 }

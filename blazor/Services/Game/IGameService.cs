@@ -4,5 +4,5 @@ namespace blazor.services;
 
 public interface IGameService
 {
-    Task<List<Personage>> AllPersons();
+  Task<List<Personage>> AllPersons();
 }
