@@ -46,9 +46,12 @@ window.logout = async () => {
   return "";
 };
 
-window.allPersonage = async () => {
+window.allPersonage = async (csrf) => {
   const response = await fetch('http://localhost:5032/personage/all', {
-    credentials: 'include'
+    credentials: 'include',
+    headers: {
+      "X-CSRF-TOKEN": csrf ?? ""
+    }
   });
   if (!response.ok) {
     return {
@@ -85,8 +88,8 @@ window.initializeMatchService = (dotNetReference) => {
 };
 
 const connection = new signalR.HubConnectionBuilder()
-.withUrl("https://localhost:7145/match_hub")
-.build();
+  .withUrl("https://localhost:7145/match_hub")
+  .build();
 
 connection.on("Join_game", (match, player) => {
   // Call the .NET method to trigger the event
@@ -117,14 +120,14 @@ window.getConnectionId = () => {
 };
 
 window.searchGame = async (playerId) => {
-  connection.invoke("SearchGameAsync", playerId,connection.connection.connectionId)
+  connection.invoke("SearchGameAsync", playerId, connection.connection.connectionId)
 }
 
-window.leaveGame = async (playerId)=>{
-  connection.invoke("LeaveGameAsync",playerId)
+window.leaveGame = async (playerId) => {
+  connection.invoke("LeaveGameAsync", playerId)
 }
 
-window.getGameState = async ()=>{
+window.getGameState = async () => {
   let response = await connection.invoke("GetGameState")
-  return response 
+  return response
 }

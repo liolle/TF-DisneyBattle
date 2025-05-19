@@ -1,5 +1,7 @@
+using blazor.Components;
 using blazor.services;
 using DotNetEnv;
+using edllx.dotnet.csrf;
 using Microsoft.AspNetCore.Components.Authorization;
 using Prometheus;
 
@@ -18,39 +20,37 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddRazorComponents()
   .AddInteractiveServerComponents();
 
-  builder.Services.AddHttpContextAccessor();
-  builder.Services.AddSignalR();
-  builder.Services.AddSingleton<ConnectionManager>();
-  builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<ConnectionManager>();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
+builder.Services.AddSingleton(typeof(Program).Assembly);
+builder.Services.AddSingleton<CSRFService>();
 
-  builder.Services.AddAuthorizationCore();
-  builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5032") });
-  builder.Services.AddScoped<IGameService,GameService>();
-  builder.Services.AddScoped<IAuthService,AuthService>();
-  builder.Services.AddScoped<MatchService>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5032") });
+builder.Services.AddScoped<HttpInfoService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<MatchService>();
 
-  var app = builder.Build();
 
-  // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-  app.UseExceptionHandler("/Error", createScopeForErrors: true);
-  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-  app.UseHsts();
-}
+var app = builder.Build();
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 app.UseHttpMetrics();
+app.UseStatusCodePagesWithReExecute("/404");
+
+app.UseCSRFBlazorServer();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
   .AddInteractiveServerRenderMode();
 
-  app.MapHub<ConnectionHub>("/match_hub");
-  app.MapMetrics(); 
-  app.UseStatusCodePagesWithRedirects("/404");
+app.MapHub<ConnectionHub>("/match_hub");
+app.MapMetrics();
 
-  app.Run();
+
+app.Run();

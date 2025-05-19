@@ -9,26 +9,26 @@
     <Navbar />
     <div class="main">
         <div class="main-div ">
-                <AuthorizeView>
-                    <NotAuthorized>
-                        <div>
-                            Login to see the Characters
-                        </div>
-                    </NotAuthorized>
-                    <Authorized>
-                        @foreach (Personage personage in Per)
-                        {
-                            <div class="card-container">
-                                <div class="card">
-                                    <div><strong>@personage.Name</strong></div>
-                                    <div>Hp: @personage.BaseHp</div>
-                                    <div>Atk: @personage.BaseAtk</div>
-                                    <div>Def: @personage.BaseDef</div>
-                                </div>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <div>
+                        Login to see the Characters
+                    </div>
+                </NotAuthorized>
+                <Authorized>
+                    @foreach (Personage personage in Per)
+                    {
+                        <div class="card-container">
+                            <div class="card">
+                                <div><strong>@personage.Name</strong></div>
+                                <div>Hp: @personage.BaseHp</div>
+                                <div>Atk: @personage.BaseAtk</div>
+                                <div>Def: @personage.BaseDef</div>
                             </div>
-                        }
-                    </Authorized>
-                </AuthorizeView>
+                        </div>
+                    }
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </div>

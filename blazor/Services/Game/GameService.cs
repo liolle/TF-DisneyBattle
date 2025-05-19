@@ -6,16 +6,18 @@ namespace blazor.services;
 public class GameService : IGameService
 {
   private readonly IJSRuntime JS;
+  private readonly HttpInfoService _info;
 
 
-  public GameService(IJSRuntime jS)
+  public GameService(IJSRuntime jS, HttpInfoService infoService)
   {
     JS = jS;
+    _info = infoService;
   }
 
   public async Task<List<Personage>> AllPersons()
   {
-    ListResult<Personage> res = await JS.InvokeAsync<ListResult<Personage>>("allPersonage");
-    return res.Result;
+    var res = await JS.InvokeAsync<dynamic>("allPersonage", _info.CSRF_CODE);
+    return [];
   }
 }

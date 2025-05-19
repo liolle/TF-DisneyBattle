@@ -15,9 +15,10 @@ public partial class Personages : ComponentBase
   {
     if (firstRender)
     {
-      if (gameService is null){return;}
+      if (gameService is null) { return; }
       Per = await gameService.AllPersons();
       StateHasChanged();
     }
   }
 }
+

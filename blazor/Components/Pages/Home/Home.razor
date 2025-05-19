@@ -10,17 +10,15 @@
 <div class="home-container">
     <Navbar />
     <div class="main">
-        <RedirectOnClaim ClaimName="PlayerState" ClaimValue="PlayerPlaying" RedirectOnValid="/game"/>
+        <RedirectOnClaim ClaimName="PlayerState" ClaimValue="PlayerPlaying" RedirectOnValid="/game" />
         <AuthorizeView>
             <Authorized>
                 @if (!Sending)
                 {
-
                     <button @onclick="SearchGame">Join Game</button>
                 }
                 else
                 {
-
                     <div>Loading...</div>
                 }
             </Authorized>
