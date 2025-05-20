@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "exception", "exception\exce
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blazor", "blazor\blazor.csproj", "{5EA3F753-2EAC-45F4-9CF7-5AEBC00540B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edllx.Dotnet.CSRF", "Edllx.Dotnet.CSRF\Edllx.Dotnet.CSRF.csproj", "{580FEE67-59B0-49C3-A084-B4AD93DED216}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{5EA3F753-2EAC-45F4-9CF7-5AEBC00540B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EA3F753-2EAC-45F4-9CF7-5AEBC00540B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EA3F753-2EAC-45F4-9CF7-5AEBC00540B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{580FEE67-59B0-49C3-A084-B4AD93DED216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{580FEE67-59B0-49C3-A084-B4AD93DED216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{580FEE67-59B0-49C3-A084-B4AD93DED216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{580FEE67-59B0-49C3-A084-B4AD93DED216}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
